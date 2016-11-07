@@ -6,12 +6,14 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 import rx.Observable;
 
+import java.util.List;
+
 public interface HackerNewsApi {
 
     String HNENDPOINT = "https://hacker-news.firebaseio.com/v0/";
 
     @GET("/topstories.json")
-    Observable<ItemList> loadTopStories();
+    Observable<List<Integer>> loadTopStories();
 
     @GET("/item/{id}.json")
     Observable<Item> getItem(@Path("id") int id);

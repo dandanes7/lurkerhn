@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.dd7.yahn.rest.client.adapter.CardAdapter;
 import com.dd7.yahn.rest.client.model.Item;
 import com.dd7.yahn.rest.client.model.ItemList;
@@ -17,6 +18,9 @@ import com.dd7.yahn.rest.client.service.ServiceFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 service.loadTopStories()
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<ItemList>() {
+                        .subscribe(new Subscriber<List<Integer>>() {
                             @Override
                             public void onCompleted() {
                                 //
@@ -65,9 +69,14 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onNext(ItemList itemList) {
-                                mCardAdapter.addData(new Item(itemList.getIds().get(0)));
+                            public void onNext(List<Integer> integers) {
+                                Toast.makeText(MainActivity.this, String.valueOf(integers.get(0)),Toast.LENGTH_LONG).show();
                             }
+
+//                            @Override
+//                            public void onNext(ItemList itemList) {
+//                                mCardAdapter.addData(new Item(Integer.parseInt(itemList.getIds()[0])));
+//                            }
                         });
 
             }
