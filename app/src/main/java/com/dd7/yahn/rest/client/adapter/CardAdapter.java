@@ -17,7 +17,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     public CardAdapter() {
         super();
-        mItems = new ArrayList<Item>();
+        mItems = new ArrayList<>();
     }
 
     public void addData(Item item) {

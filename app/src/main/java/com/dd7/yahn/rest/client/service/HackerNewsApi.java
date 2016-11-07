@@ -8,12 +8,12 @@ import rx.Observable;
 
 public interface HackerNewsApi {
 
-    String HNENDPOINT = " https://hacker-news.firebaseio.com/v0/";
+    String HNENDPOINT = "https://hacker-news.firebaseio.com/v0/";
 
-    @GET("topstories.json")
+    @GET("/topstories.json")
     Observable<ItemList> loadTopStories();
 
-    @GET("item/{id}.json")
+    @GET("/item/{id}.json")
     Observable<Item> getItem(@Path("id") int id);
 
 }

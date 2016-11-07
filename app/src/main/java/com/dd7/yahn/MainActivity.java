@@ -20,11 +20,11 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -70,27 +70,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-//                for(int id: ids) {
-//                    service.getItem(id)
-//                            .subscribeOn(Schedulers.newThread())
-//                            .observeOn(AndroidSchedulers.mainThread())
-//                            .subscribe(new Subscriber<Item>() {
-//                                @Override
-//                                public final void onCompleted() {
-//                                    // do nothing
-//                                }
-//
-//                                @Override
-//                                public final void onError(Throwable e) {
-//                                    Log.e("GithubDemo", e.getMessage());
-//                                }
-//
-//                                @Override
-//                                public final void onNext(Item response) {
-//                                    mCardAdapter.addData(response);
-//                                }
-//                            });
-//                }
             }
         });
     }
