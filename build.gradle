@@ -1,0 +1,35 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    supportVersion = '23.0.0'
+    stethoVersion = '1.1.1'
+    daggerVersion = '2.0.1'
+    loganSquareVersion = '1.1.0'
+    robotoTextViewVersion = '2.4.0'
+    rxBindingVersion = '0.2.0'
+    rxLifecycleVersion = '0.2.0'
+    retrofitVersion = '1.9.+'
+}
+
