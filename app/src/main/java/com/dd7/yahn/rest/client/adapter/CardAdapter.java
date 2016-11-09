@@ -1,5 +1,6 @@
 package com.dd7.yahn.rest.client.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,11 @@ import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
+    private Context context;
     List<Item> mItems;
 
-    public CardAdapter() {
-        super();
+    public CardAdapter(Context context) {
+        this.context = context;
         mItems = new ArrayList<>();
     }
 
@@ -34,15 +36,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_view, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Item item = mItems.get(i);
-        viewHolder.storyId.setText(item.getId());
-
+        viewHolder.storyId.setText(Integer.toString(item.getId()));
     }
 
     @Override

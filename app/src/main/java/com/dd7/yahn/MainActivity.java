@@ -12,14 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.dd7.yahn.rest.client.adapter.CardAdapter;
 import com.dd7.yahn.rest.client.model.Item;
-import com.dd7.yahn.rest.client.model.ItemList;
 import com.dd7.yahn.rest.client.service.HackerNewsApi;
 import com.dd7.yahn.rest.client.service.ServiceFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        final CardAdapter mCardAdapter = new CardAdapter();
+        final CardAdapter mCardAdapter = new CardAdapter(this);
         mRecyclerView.setAdapter(mCardAdapter);
 
         Button bClear = (Button) findViewById(R.id.button_clear);
@@ -70,15 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onNext(List<Integer> integers) {
-                                Toast.makeText(MainActivity.this, String.valueOf(integers.get(0)),Toast.LENGTH_LONG).show();
+                                mCardAdapter.addData(new Item(integers.get(0)));
                             }
-
-//                            @Override
-//                            public void onNext(ItemList itemList) {
-//                                mCardAdapter.addData(new Item(Integer.parseInt(itemList.getIds()[0])));
-//                            }
                         });
-
             }
         });
     }
