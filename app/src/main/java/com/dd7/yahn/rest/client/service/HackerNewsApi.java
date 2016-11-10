@@ -13,11 +13,11 @@ public interface HackerNewsApi {
     String HNENDPOINT = "https://hacker-news.firebaseio.com/v0/";
 
     @GET("/topstories.json")
-    Observable<List<Integer>> loadTopStories();
+    Observable<List<Integer>> getTopStories();
 
 
     @GET("/beststories.json")
-    Observable<List<Integer>> loadBestStories();
+    Observable<List<Integer>> getBestStories();
 
 
     @GET("/item/{id}.json")

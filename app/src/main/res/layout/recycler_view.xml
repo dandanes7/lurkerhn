@@ -9,26 +9,74 @@
 
             card_view:cardUseCompatPadding="true"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             card_view:contentPadding="@dimen/activity_horizontal_margin"
             card_view:cardCornerRadius="5dp"
             card_view:theme="@android:style/Animation">
-        <LinearLayout
+        <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+            <!--deletethis-->
+            <!--<TextView-->
+            <!--android:id="@+id/story_id"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="12sp"/>-->
+            <!---->
             <TextView
-                    android:id="@+id/story_id"
+                    android:id="@+id/story_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"/>
-
-            <TextView
-                    android:id="@+id/st"
+                    android:textSize="@dimen/story_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"/>
+            <!--<TextView-->
+            <!--android:id="@+id/story_score"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="@dimen/story_detail_text_size"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--/>-->
+            <!---->
+            <!--<TextView-->
+            <!--android:id="@+id/story_by"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="@dimen/story_detail_text_size"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--/>-->
+            <LinearLayout
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:id="@+id/story_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/story_detail_text_size"
+                />
+
+                <TextView
+                        android:id="@+id/story_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/story_detail_text_size"
+                />
+                <TextView
+                        android:id="@+id/story_url"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/story_detail_text_size"
+                />
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
 
     </android.support.v7.widget.CardView>

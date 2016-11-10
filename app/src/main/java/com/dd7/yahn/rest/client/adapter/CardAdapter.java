@@ -34,15 +34,22 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycler_view, viewGroup, false);
-        return new ViewHolder(v);
+//        View v = LayoutInflater.from(viewGroup.getContext())
+//                .inflate(R.layout.recycler_view, viewGroup, false);
+//        return new ViewHolder(v);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.recycler_view, null, false);
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        rootView.setLayoutParams(lp);
+        return new ViewHolder(rootView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Item item = mItems.get(i);
-        viewHolder.storyId.setText(Integer.toString(item.getId()));
+        viewHolder.storyScore.setText(Integer.toString(item.getScore()));
+        viewHolder.storyBy.setText(item.getBy());
+        viewHolder.storyUrl.setText(item.getUrl());
+        viewHolder.storyTitle.setText(item.getTitle());
     }
 
     @Override
@@ -51,11 +58,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView storyId;
+        TextView storyScore;
+        TextView storyBy;
+        TextView storyTitle;
+        TextView storyUrl;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            storyId = (TextView) itemView.findViewById(R.id.story_id);
+            storyScore = (TextView) itemView.findViewById(R.id.story_score);
+            storyBy = (TextView) itemView.findViewById(R.id.story_by);
+            storyTitle = (TextView) itemView.findViewById(R.id.story_title);
+            storyUrl = (TextView) itemView.findViewById(R.id.story_url);
         }
     }
 }

@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.dd7.yahn.rest.client.adapter.CardAdapter;
 import com.dd7.yahn.rest.client.model.Item;
 import com.dd7.yahn.rest.client.service.HackerNewsApi;
@@ -18,6 +17,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,37 +40,67 @@ public class MainActivity extends AppCompatActivity {
                 mCardAdapter.clear();
             }
         });
-        Button testButton = (Button) findViewById(R.id.test_button);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView testTextView = (TextView) findViewById(R.id.test_text);
-                testTextView.setText("some test text fool");
-            }
-        });
+//        Button testButton = (Button) findViewById(R.id.test_button);
+//        testButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                TextView testTextView = (TextView) findViewById(R.id.test_text);
+//                testTextView.setText("some test text fool");
+//            }
+//        });
 
         bFetch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
-                service.loadTopStories()
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<List<Integer>>() {
-                            @Override
-                            public void onCompleted() {
-                                //
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("Some error", e.getMessage());
-                            }
+                final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
 
-                            @Override
-                            public void onNext(List<Integer> integers) {
-                                mCardAdapter.addData(new Item(integers.get(0)));
-                            }
-                        });
+                List<Integer> storyIds= Arrays.asList(12922141,12921389,12922514,12921570,12920449,12919780,12922318,12920598,12920279);
+
+                for (Integer id : storyIds) {
+                    service.getItem(id)
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<Item>() {
+                                @Override
+                                public void onCompleted() {
+                                    //
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.e("Some error", e.getMessage());
+                                }
+
+                                @Override
+                                public void onNext(Item item) {
+                                    mCardAdapter.addData(item);
+                                }
+                            });
+                }
+
+//                service.getTopStories().flatMap(storyIds )
+//
+//                for (Integer id : storyIds.subList(0, 30)) {
+//                    service.getItem(id)
+//                            .subscribeOn(Schedulers.newThread())
+//                            .observeOn(AndroidSchedulers.mainThread())
+//                            .subscribe(new Subscriber<Item>() {
+//                                @Override
+//                                public void onCompleted() {
+//                                    //
+//                                }
+//
+//                                @Override
+//                                public void onError(Throwable e) {
+//                                    Log.e("Some error", e.getMessage());
+//                                }
+//
+//                                @Override
+//                                public void onNext(Item item) {
+////                                    mCardAdapter.addData(new Item(integers.get(0)));
+//                                    mCardAdapter.addData(item);
+//                                }
+//                            });
             }
         });
     }

@@ -27,14 +27,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fetch"/>
-
-        <Button android:id="@+id/test_button"
-                android:text="Test"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        <TextView android:id="@+id/test_text"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
