@@ -1,6 +1,9 @@
 package com.dd7.yahn.rest.client.model;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Item {
 
@@ -9,6 +12,7 @@ public class Item {
     private String type;
     private String by;
     private long time;
+    private String timeFormatted;
     private String text;
     private boolean dead;
     private int parent;
@@ -115,5 +119,34 @@ public class Item {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getTimeFormatted() {
+        if (timeFormatted == null) {
+            Date date = new Date(System.currentTimeMillis() - (time * 1000L));
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int hours = cal.get(Calendar.HOUR_OF_DAY);
+            timeFormatted = String.format(Locale.ENGLISH, "%d hours ago", hours);
+        }
+        return timeFormatted;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", deleted=" + deleted +
+                ", type='" + type + '\'' +
+                ", by='" + by + '\'' +
+                ", time=" + time +
+                ", text='" + text + '\'' +
+                ", dead=" + dead +
+                ", parent=" + parent +
+                ", kids=" + kids +
+                ", url='" + url + '\'' +
+                ", score=" + score +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

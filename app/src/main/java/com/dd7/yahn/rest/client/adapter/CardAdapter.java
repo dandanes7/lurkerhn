@@ -10,6 +10,7 @@ import com.dd7.yahn.R;
 import com.dd7.yahn.rest.client.model.Item;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
@@ -48,7 +49,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         Item item = mItems.get(i);
         viewHolder.storyScore.setText(Integer.toString(item.getScore()));
         viewHolder.storyBy.setText(item.getBy());
-        viewHolder.storyUrl.setText(item.getUrl());
+//        viewHolder.storyTime.setText(String.valueOf(new Date(item.getTime())));
+        viewHolder.storyTime.setText(item.getTimeFormatted());
         viewHolder.storyTitle.setText(item.getTitle());
     }
 
@@ -61,14 +63,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         TextView storyScore;
         TextView storyBy;
         TextView storyTitle;
-        TextView storyUrl;
+        TextView storyTime;
 
         ViewHolder(View itemView) {
             super(itemView);
             storyScore = (TextView) itemView.findViewById(R.id.story_score);
             storyBy = (TextView) itemView.findViewById(R.id.story_by);
             storyTitle = (TextView) itemView.findViewById(R.id.story_title);
-            storyUrl = (TextView) itemView.findViewById(R.id.story_url);
+            storyTime = (TextView) itemView.findViewById(R.id.story_time);
         }
     }
 }
