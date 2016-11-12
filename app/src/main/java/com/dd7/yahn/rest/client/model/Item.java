@@ -1,5 +1,7 @@
 package com.dd7.yahn.rest.client.model;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -130,6 +132,12 @@ public class Item {
             timeFormatted = String.format(Locale.ENGLISH, "%d hours ago", hours);
         }
         return timeFormatted;
+    }
+
+    public String getUrlDomainName() throws URISyntaxException {
+        URI uri = new URI(url);
+        String domain = uri.getHost();
+        return domain.startsWith("www.") ? domain.substring(4) : domain;
     }
 
     @Override

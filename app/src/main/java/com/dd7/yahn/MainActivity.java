@@ -1,5 +1,6 @@
 package com.dd7.yahn;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,7 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 import com.dd7.yahn.rest.client.adapter.CardAdapter;
 import com.dd7.yahn.rest.client.model.Item;
 import com.dd7.yahn.rest.client.service.HackerNewsApi;
@@ -17,15 +18,18 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int MAX_STORIES_TO_DISPLAY = 15;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = getApplicationContext();
 
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -54,61 +58,51 @@ public class MainActivity extends AppCompatActivity {
 
                 final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
 
-                List<Integer> storyIds= Arrays.asList(12922141,12921389,12922514,12921570,12920449,12919780,12922318,12920598,12920279);
+                service.getTopStories().subscribeOn(AndroidSchedulers.mainThread())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<Integer>>() {
+                    @Override
+                    public void onCompleted() {
 
-                for (Integer id : storyIds) {
-                    service.getItem(id)
-                            .subscribeOn(Schedulers.newThread())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Subscriber<Item>() {
-                                @Override
-                                public void onCompleted() {
-                                    //
-                                }
+                    }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.e("Some error", e.getMessage());
-                                }
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(context, "Could not fetch stories", Toast.LENGTH_SHORT).show();
+                    }
 
-                                @Override
-                                public void onNext(Item item) {
-                                    mCardAdapter.addData(item);
-                                }
-                            });
-                }
+                    @Override
+                    public void onNext(List<Integer> integers) {
+                        for (Integer id : integers.subList(0, MAX_STORIES_TO_DISPLAY)) {
+                            service.getItem(id)
+                                    .subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Subscriber<Item>() {
+                                        @Override
+                                        public void onCompleted() {
+                                            //
+                                        }
 
-//                service.getTopStories().flatMap(storyIds )
-//
-//                for (Integer id : storyIds.subList(0, 30)) {
-//                    service.getItem(id)
-//                            .subscribeOn(Schedulers.newThread())
-//                            .observeOn(AndroidSchedulers.mainThread())
-//                            .subscribe(new Subscriber<Item>() {
-//                                @Override
-//                                public void onCompleted() {
-//                                    //
-//                                }
-//
-//                                @Override
-//                                public void onError(Throwable e) {
-//                                    Log.e("Some error", e.getMessage());
-//                                }
-//
-//                                @Override
-//                                public void onNext(Item item) {
-////                                    mCardAdapter.addData(new Item(integers.get(0)));
-//                                    mCardAdapter.addData(item);
-//                                }
-//                            });
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            Log.e("Some error", e.getMessage());
+                                        }
+
+                                        @Override
+                                        public void onNext(Item item) {
+                                            mCardAdapter.addData(item);
+                                        }
+                                    });
+                        }
+                    }
+                });
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
 }
