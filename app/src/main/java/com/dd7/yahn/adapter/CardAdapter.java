@@ -1,8 +1,6 @@
-package com.dd7.yahn.rest.client.adapter;
+package com.dd7.yahn.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import com.dd7.yahn.R;
 import com.dd7.yahn.rest.client.model.Item;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
@@ -37,9 +34,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-//        View v = LayoutInflater.from(viewGroup.getContext())
-//                .inflate(R.layout.recycler_view, viewGroup, false);
-//        return new ViewHolder(v);
         View rootView = LayoutInflater.from(context).inflate(R.layout.recycler_view, null, false);
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rootView.setLayoutParams(lp);
@@ -56,12 +50,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         viewHolder.storyTitle.setText(item.getTitle());
     }
 
+    private static ClickListener clickListener;
+
     @Override
     public int getItemCount() {
         return mItems.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView storyScore;
         TextView storyBy;
         TextView storyTitle;
@@ -73,6 +69,33 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             storyBy = (TextView) itemView.findViewById(R.id.story_by);
             storyTitle = (TextView) itemView.findViewById(R.id.story_title);
             storyTime = (TextView) itemView.findViewById(R.id.story_time);
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
+
+
+        @Override
+        public void onClick(View v) {
+            int adapterPos = getAdapterPosition();
+            clickListener.onItemClick(adapterPos, v, mItems);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int adapterPos = getAdapterPosition();
+            clickListener.onItemLongClick(adapterPos, v, mItems);
+            return false;
+        }
+
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        CardAdapter.clickListener = clickListener;
+    }
+
+    public interface ClickListener {
+        void onItemClick(int position, View v, List<Item> items);
+
+        void onItemLongClick(int position, View v, List<Item> items);
     }
 }

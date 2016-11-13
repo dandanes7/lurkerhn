@@ -2,17 +2,14 @@ package com.dd7.yahn;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
-import com.dd7.yahn.rest.client.adapter.CardAdapter;
+import com.dd7.yahn.adapter.CardAdapter;
 import com.dd7.yahn.rest.client.model.Item;
 import com.dd7.yahn.rest.client.service.HackerNewsApi;
 import com.dd7.yahn.rest.client.service.ServiceFactory;
@@ -27,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MAX_STORIES_TO_DISPLAY = 15;
     private Context context;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +34,14 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         final CardAdapter mCardAdapter = new CardAdapter(this);
+        mCardAdapter.setOnItemClickListener(new ItemClickListener());
+
         mRecyclerView.setAdapter(mCardAdapter);
 
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         loadTopStories(mCardAdapter);
+
     }
 
     private void loadTopStories(final CardAdapter mCardAdapter) {
@@ -95,10 +96,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main_menu, menu);
-//        return true;
-//    }
+    private class ItemClickListener implements CardAdapter.ClickListener {
+        @Override
+        public void onItemClick(int position, View v, List<Item> items) {
+            Item item = items.get(position);
+
+            Toast.makeText(context, "You have selected pos " + item.getTitle() + " with title: ", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onItemLongClick(int position, View v, List<Item> items) {
+            Item item = items.get(position);
+
+            Toast.makeText(context, "You have selected pos" + item.getTitle() + " with title: ", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
