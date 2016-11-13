@@ -3,6 +3,7 @@ package com.dd7.yahn;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int MAX_STORIES_TO_DISPLAY = 15;
     private Context context;
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,64 +39,58 @@ public class MainActivity extends AppCompatActivity {
         final CardAdapter mCardAdapter = new CardAdapter(this);
         mRecyclerView.setAdapter(mCardAdapter);
 
-        Button bClear = (Button) findViewById(R.id.button_clear);
-        Button bFetch = (Button) findViewById(R.id.button_fetch);
-        bClear.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mCardAdapter.clear();
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                loadTopStories(mCardAdapter);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
-//        Button testButton = (Button) findViewById(R.id.test_button);
-//        testButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                TextView testTextView = (TextView) findViewById(R.id.test_text);
-//                testTextView.setText("some test text fool");
-//            }
-//        });
+        loadTopStories(mCardAdapter);
+    }
 
-        bFetch.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+    private void loadTopStories(final CardAdapter mCardAdapter) {
+        final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
+        mCardAdapter.clear();
+        service.getTopStories().subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<Integer>>() {
+            @Override
+            public void onCompleted() {
 
-                final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
+            }
 
-                service.getTopStories().subscribeOn(AndroidSchedulers.mainThread())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<Integer>>() {
-                    @Override
-                    public void onCompleted() {
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(context, "Could not fetch stories", Toast.LENGTH_SHORT).show();
+            }
 
-                    }
+            @Override
+            public void onNext(List<Integer> integers) {
+                for (Integer id : integers.subList(0, MAX_STORIES_TO_DISPLAY)) {
+                    service.getItem(id)
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<Item>() {
+                                @Override
+                                public void onCompleted() {
+                                    //
+                                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(context, "Could not fetch stories", Toast.LENGTH_SHORT).show();
-                    }
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.e("Some error", e.getMessage());
+                                }
 
-                    @Override
-                    public void onNext(List<Integer> integers) {
-                        for (Integer id : integers.subList(0, MAX_STORIES_TO_DISPLAY)) {
-                            service.getItem(id)
-                                    .subscribeOn(Schedulers.newThread())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new Subscriber<Item>() {
-                                        @Override
-                                        public void onCompleted() {
-                                            //
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-                                            Log.e("Some error", e.getMessage());
-                                        }
-
-                                        @Override
-                                        public void onNext(Item item) {
-                                            mCardAdapter.addData(item);
-                                        }
-                                    });
-                        }
-                    }
-                });
+                                @Override
+                                public void onNext(Item item) {
+                                    mCardAdapter.addData(item);
+                                }
+                            });
+                }
             }
         });
     }
