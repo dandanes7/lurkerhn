@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.dd7.yahn.R;
 import com.dd7.yahn.rest.client.model.Item;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,21 +46,37 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         Item item = mItems.get(i);
         viewHolder.storyScore.setText(Integer.toString(item.getScore()));
         viewHolder.storyBy.setText(item.getBy());
-//        viewHolder.storyTime.setText(String.valueOf(new Date(item.getTime())));
         viewHolder.storyTime.setText(item.getTimeFormatted());
         viewHolder.storyTitle.setText(item.getTitle());
+        try {
+            viewHolder.storyUrl.setText(item.getUrlDomainName());
+        } catch (URISyntaxException e) {
+            viewHolder.storyUrl.setText("-");
+        }
     }
-
-    private static ClickListener clickListener;
 
     @Override
     public int getItemCount() {
         return mItems.size();
     }
 
+
+    private static ClickListener clickListener;
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        CardAdapter.clickListener = clickListener;
+    }
+
+    public interface ClickListener {
+        void onItemClick(int position, View v, List<Item> items);
+
+        void onItemLongClick(int position, View v, List<Item> items);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView storyScore;
         TextView storyBy;
+        TextView storyUrl;
         TextView storyTitle;
         TextView storyTime;
 
@@ -67,6 +84,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             super(itemView);
             storyScore = (TextView) itemView.findViewById(R.id.story_score);
             storyBy = (TextView) itemView.findViewById(R.id.story_by);
+            storyUrl = (TextView) itemView.findViewById(R.id.story_url);
             storyTitle = (TextView) itemView.findViewById(R.id.story_title);
             storyTime = (TextView) itemView.findViewById(R.id.story_time);
             itemView.setOnClickListener(this);
@@ -87,15 +105,5 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             return false;
         }
 
-    }
-
-    public void setOnItemClickListener(ClickListener clickListener) {
-        CardAdapter.clickListener = clickListener;
-    }
-
-    public interface ClickListener {
-        void onItemClick(int position, View v, List<Item> items);
-
-        void onItemLongClick(int position, View v, List<Item> items);
     }
 }

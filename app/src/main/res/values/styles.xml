@@ -7,8 +7,8 @@
         <!--<item name="colorPrimary">@color/colorPrimary</item>-->
         <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
         <!--<item name="colorAccent">@color/colorAccent</item>-->
-        <item name="android:textColorPrimary">#e8eaf6</item>
-        <item name="android:textColor">#e8eaf6</item>
+        <item name="android:textColorPrimary">@color/textCol</item>
+        <item name="android:textColor">@color/textColPrimary</item>
         <!--<item name="android:background">#1b5e20</item>-->
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:windowBackground">@color/background</item>

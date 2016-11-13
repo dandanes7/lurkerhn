@@ -5,4 +5,6 @@
     <color name="colorPrimaryDark">#827717</color>
     <color name="colorAccent">#ffab40</color>
     <color name="storyBackground">#456919</color>
+    <color name="textColPrimary">#e8eaf6</color>
+    <color name="textCol">#e8eaf6</color>
 </resources>

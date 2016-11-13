@@ -45,14 +45,32 @@
                             android:textSize="@dimen/story_detail_text_size"
                             android:layout_alignParentLeft="true"
                     />
+                    <LinearLayout android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_centerHorizontal="true">
+                        <TextView
+                                android:id="@+id/story_by"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/story_detail_text_size"
+                        />
+                        <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_centerVertical="true"
+                                android:background="@color/textCol"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                        />
+                        <TextView
+                                android:id="@+id/story_url"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/story_detail_text_size"
+                        />
 
-                    <TextView
-                            android:id="@+id/story_by"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/story_detail_text_size"
-                            android:layout_centerHorizontal="true"
-                    />
+                    </LinearLayout>
+
                     <TextView
                             android:id="@+id/story_time"
                             android:layout_width="wrap_content"
