@@ -5,4 +5,5 @@
     <dimen name="text_margin">5dp</dimen>
     <dimen name="story_detail_text_size">10dp</dimen>
     <dimen name="story_title">12dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

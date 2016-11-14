@@ -1,6 +1,7 @@
 package com.dd7.yahn;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -102,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
             Item item = items.get(position);
 
             Toast.makeText(context, "You have selected pos " + item.getTitle() + " with title: ", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, StoryDetail.class);
+            intent.putExtra("item", item);
+            startActivity(intent);
         }
 
         @Override

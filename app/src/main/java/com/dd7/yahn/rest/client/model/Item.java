@@ -1,5 +1,6 @@
 package com.dd7.yahn.rest.client.model;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Calendar;
@@ -7,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class Item {
+public class Item implements Serializable{
 
     private int id;
     private boolean deleted;

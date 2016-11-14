@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">HN Read</string>
     <string name="action_settings">Some stuff</string>
+    <string name="title_activity_story_detail">StoryDetail</string>
 </resources>
