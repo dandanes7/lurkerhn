@@ -26,6 +26,17 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.dd7.yahn.MainActivity"/>
         </activity>
+        <activity android:name=".ViewStory">
+        </activity>
+        <activity
+                android:name=".StoryContent"
+                android:label="@string/title_activity_story_content"
+                android:parentActivityName=".MainActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.dd7.yahn.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

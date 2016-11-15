@@ -9,16 +9,15 @@ import android.widget.TextView;
 import com.dd7.yahn.R;
 import com.dd7.yahn.rest.client.model.Item;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
+public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.ViewHolder> {
 
     private Context context;
     List<Item> mItems;
 
-    public CardAdapter(Context context) {
+    public StoryCardAdapter(Context context) {
         this.context = context;
         mItems = new ArrayList<>();
     }
@@ -48,11 +47,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         viewHolder.storyBy.setText(item.getBy());
         viewHolder.storyTime.setText(item.getTimeFormatted());
         viewHolder.storyTitle.setText(item.getTitle());
-        try {
-            viewHolder.storyUrl.setText(item.getUrlDomainName());
-        } catch (URISyntaxException e) {
-            viewHolder.storyUrl.setText("-");
-        }
+        viewHolder.storyUrl.setText(item.getUrlDomainName());
     }
 
     @Override
@@ -64,7 +59,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private static ClickListener clickListener;
 
     public void setOnItemClickListener(ClickListener clickListener) {
-        CardAdapter.clickListener = clickListener;
+        StoryCardAdapter.clickListener = clickListener;
     }
 
     public interface ClickListener {

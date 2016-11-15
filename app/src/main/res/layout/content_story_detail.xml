@@ -13,4 +13,44 @@
         tools:showIn="@layout/activity_story_detail"
         tools:context="com.dd7.yahn.StoryDetail">
 
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+        <RelativeLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center">
+            <LinearLayout android:gravity="center"
+                          android:layout_centerHorizontal="true"
+                          android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+
+                <Button android:id="@+id/save_story"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Save"
+                        android:background="@color/storyBackground"
+                />
+                <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:background="@color/textCol"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                />
+                <Button android:id="@+id/view_story"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View"
+                        android:background="@color/storyBackground"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        </ScrollView>
+    </LinearLayout>
 </RelativeLayout>

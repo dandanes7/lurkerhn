@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import com.dd7.yahn.adapter.CardAdapter;
+import com.dd7.yahn.adapter.StoryCardAdapter;
 import com.dd7.yahn.rest.client.model.Item;
 import com.dd7.yahn.rest.client.service.HackerNewsApi;
 import com.dd7.yahn.rest.client.service.ServiceFactory;
@@ -36,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        final CardAdapter mCardAdapter = new CardAdapter(this);
-        mCardAdapter.setOnItemClickListener(new ItemClickListener());
+        final StoryCardAdapter mStoryCardAdapter = new StoryCardAdapter(this);
+        mStoryCardAdapter.setOnItemClickListener(new ItemClickListener());
 
-        mRecyclerView.setAdapter(mCardAdapter);
+        mRecyclerView.setAdapter(mStoryCardAdapter);
 
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -47,17 +47,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
 
-                loadTopStories(mCardAdapter);
+                loadTopStories(mStoryCardAdapter);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
-        loadTopStories(mCardAdapter);
+        loadTopStories(mStoryCardAdapter);
 
     }
 
-    private void loadTopStories(final CardAdapter mCardAdapter) {
+    private void loadTopStories(final StoryCardAdapter mStoryCardAdapter) {
         final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
-        mCardAdapter.clear();
+        mStoryCardAdapter.clear();
         service.getTopStories().subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<Integer>>() {
             @Override
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onNext(Item item) {
-                                    mCardAdapter.addData(item);
+                                    mStoryCardAdapter.addData(item);
                                 }
                             });
                 }
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class ItemClickListener implements CardAdapter.ClickListener {
+    private class ItemClickListener implements StoryCardAdapter.ClickListener {
         @Override
         public void onItemClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
@@ -111,8 +111,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemLongClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-
-            Toast.makeText(context, "You have selected pos" + item.getTitle() + " with title: ", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, StoryContent.class);
+            intent.putExtra("item", item);
+            startActivity(intent);
         }
     }
 }

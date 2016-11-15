@@ -135,10 +135,14 @@ public class Item implements Serializable{
         return timeFormatted;
     }
 
-    public String getUrlDomainName() throws URISyntaxException {
-        URI uri = new URI(url);
-        String domain = uri.getHost();
-        return domain.startsWith("www.") ? domain.substring(4) : domain;
+    public String getUrlDomainName() {
+        try {
+            URI uri = new URI(url);
+            String domain = uri.getHost();
+            return domain.startsWith("www.") ? domain.substring(4) : domain;
+        } catch (URISyntaxException | NullPointerException e) {
+            return "-";
+        }
     }
 
     @Override
