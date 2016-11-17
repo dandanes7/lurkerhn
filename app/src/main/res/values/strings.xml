@@ -4,4 +4,6 @@
     <string name="action_settings">Some stuff</string>
     <string name="title_activity_story_detail">StoryDetail</string>
     <string name="title_activity_story_content">StoryContent</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
 </resources>

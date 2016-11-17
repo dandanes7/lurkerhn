@@ -18,7 +18,6 @@ public class StoryContent extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Item item = (Item) getIntent().getSerializableExtra("item");
 
         WebView theWebPage = new WebView(this);

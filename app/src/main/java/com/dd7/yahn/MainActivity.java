@@ -3,7 +3,9 @@ package com.dd7.yahn;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MAX_STORIES_TO_DISPLAY = 15;
+    private static final int MAX_STORIES_TO_DISPLAY = 30;
     private Context context;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
+
+
 
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(context, "Could not fetch stories", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Could not fetch stories, please check if the data service are enabled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -79,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                             .subscribe(new Subscriber<Item>() {
                                 @Override
                                 public void onCompleted() {
-                                    //
                                 }
 
                                 @Override
@@ -101,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-
-            Toast.makeText(context, "You have selected pos " + item.getTitle() + " with title: ", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(context, StoryDetail.class);
             intent.putExtra("item", item);
             startActivity(intent);
