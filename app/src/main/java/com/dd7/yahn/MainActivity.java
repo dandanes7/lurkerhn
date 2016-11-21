@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         loadTopStories(mStoryCardAdapter);
-
+        //TODO: add color to the upvotes text:> 100 is blue, >2000 Green, something like that
     }
 
     private void loadTopStories(final StoryCardAdapter mStoryCardAdapter) {
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(context, "Could not fetch stories, please check if the data service are enabled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Could not fetch stories, please check if you have an active internet connection", Toast.LENGTH_SHORT).show();
             }
 
             @Override

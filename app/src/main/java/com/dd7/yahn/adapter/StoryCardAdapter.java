@@ -2,10 +2,14 @@ package com.dd7.yahn.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.dd7.yahn.R;
 import com.dd7.yahn.rest.client.model.Item;
 
@@ -43,11 +47,29 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Item item = mItems.get(i);
-        viewHolder.storyScore.setText(Integer.toString(item.getScore()));
+        int score = item.getScore();
+        String title = item.getTitle();
+        viewHolder.storyTitle.setText(title);
+        viewHolder.storyScore.setText(Integer.toString(score));
         viewHolder.storyBy.setText(item.getBy());
         viewHolder.storyTime.setText(item.getTimeFormatted());
-        viewHolder.storyTitle.setText(item.getTitle());
         viewHolder.storyUrl.setText(item.getUrlDomainName());
+
+        setScoreColor(viewHolder, score);
+    }
+
+    private void setScoreColor(ViewHolder viewHolder, int score) {
+        if (score < 50) {
+            viewHolder.storyScore.setTextColor(context.getResources().getColor(R.color.under50));
+        } else if (score < 100) {
+            viewHolder.storyScore.setTextColor(context.getResources().getColor(R.color.under100));
+        } else if (score < 150) {
+            viewHolder.storyScore.setTextColor(context.getResources().getColor(R.color.under150));
+        } else if (score < 250) {
+            viewHolder.storyScore.setTextColor(context.getResources().getColor(R.color.under250));
+        } else {
+            viewHolder.storyScore.setTextColor(context.getResources().getColor(R.color.over250));
+        }
     }
 
     @Override

@@ -6,20 +6,21 @@
               android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-            android:background="@color/colorPrimary"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/colorPrimary"
             card_view:cardPreventCornerOverlap="false"
             card_view:cardCornerRadius="5dp"
-            card_view:theme="@android:style/Animation">
+            card_view:theme="@android:style/Animation"
+            android:padding="15dp">
         <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:layout_marginBottom="@dimen/cardview_compat_inset_shadow"
-                >
-
+                android:padding="15dp">
+            <!--TODO: CHANGE SHADOW HERE-->
+            <!--TODO: Animation on touch-->
             <LinearLayout android:orientation="vertical"
                           android:layout_width="match_parent"
                           android:layout_height="match_parent">
@@ -31,8 +32,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
-                        android:layout_gravity="center"
-                    />
+                        android:layout_gravity="center"/>
 
                 <RelativeLayout
                         android:layout_alignParentBottom="true"
@@ -44,8 +44,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/story_detail_text_size"
-                            android:layout_alignParentLeft="true"
-                    />
+                            android:layout_alignParentLeft="true"/>
                     <LinearLayout android:layout_width="wrap_content"
                                   android:layout_height="wrap_content"
                                   android:layout_centerHorizontal="true">
@@ -54,37 +53,35 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/story_detail_text_size"
-                        />
+                                android:textColor="@color/storyDetail"/>
                         <View
                                 android:layout_width="1dp"
                                 android:layout_height="match_parent"
                                 android:layout_centerVertical="true"
                                 android:background="@color/textCol"
                                 android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
-                        />
+                                android:layout_marginRight="5dp"/>
                         <TextView
                                 android:id="@+id/story_url"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/story_detail_text_size"
-                        />
-
+                                android:textColor="@color/storyDetail"/>
                     </LinearLayout>
-
                     <TextView
                             android:id="@+id/story_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/story_detail_text_size"
                             android:layout_alignParentRight="true"
-                    />
+                            android:textColor="@color/storyDetail"/>
                 </RelativeLayout>
             </LinearLayout>
-
         </RelativeLayout>
-
-
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/storyDetail"/>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

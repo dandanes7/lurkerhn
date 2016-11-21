@@ -60,6 +60,20 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorPrimary"
                         android:src="@drawable/ic_view"/>
+                <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:background="@color/textCol"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                />
+                <ImageButton
+                        android:id="@+id/open_story"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimary"
+                        android:src="@drawable/ic_openstory"/>
                 <!--
                     android:tint="@color/colorAccent"
                                                     -->

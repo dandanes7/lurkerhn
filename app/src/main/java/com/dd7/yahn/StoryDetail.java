@@ -2,6 +2,7 @@ package com.dd7.yahn;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,6 @@ public class StoryDetail extends AppCompatActivity {
 
     private static final String ID_FILE = "HnReaderSavedStories";
     private static final String SAVE_STORY = "SaveStory";
-    private String separator = System.getProperty("line.separator");
     private Context context;
 
     @Override
@@ -38,11 +38,23 @@ public class StoryDetail extends AppCompatActivity {
         context = getApplicationContext();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setTitle("Story detail");
         final Item item = (Item) getIntent().getSerializableExtra("item");
+        setTitle(item.getTitle());
+
+        ImageButton saveButton = (ImageButton) findViewById(R.id.save_story);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readSavedStories();
+                saveStory(item);
+            }
+        });
+
+        if (item.getUrl() == null || item.getUrl().isEmpty()) {
+            return;
+        }
 
         ImageButton viewButton = (ImageButton ) findViewById(R.id.view_story);
         viewButton.setOnClickListener(new View.OnClickListener() {
@@ -67,14 +79,16 @@ public class StoryDetail extends AppCompatActivity {
             }
         });
 
-        ImageButton saveButton = (ImageButton) findViewById(R.id.save_story);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton openInBrowserButton = (ImageButton) findViewById(R.id.open_story);
+        openInBrowserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                readSavedStories();
-                saveStory(item);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(item.getUrl()));
+                startActivity(intent);
             }
         });
+        //TODO: if askHN or showHN, there are no LINKS!!!!!TREAT CORNERCASE
     }
 
     private void saveStory(Item item) {
