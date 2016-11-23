@@ -11,7 +11,7 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_story_detail"
-        tools:context="com.dd7.yahn.StoryDetail">
+        tools:mContext="com.dd7.yahn.StoryDetail">
 
     <LinearLayout android:orientation="vertical"
                   android:layout_width="match_parent"
@@ -80,11 +80,38 @@
                 <!--TODO: DECIDE HOW TO DO WITH SAVED ARTICLES: IF I MARK EM OR NOT-->
             </LinearLayout>
         </RelativeLayout>
-
-        <ScrollView
+        <RelativeLayout
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-        </ScrollView>
+                android:layout_height="wrap_content">
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerHorizontal="true">
+                <TextView
+                        android:id="@+id/story_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/story_detail_text_size"
+                        android:textColor="@color/storyDetail"/>
+                <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:background="@color/textCol"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"/>
+                <TextView
+                        android:id="@+id/story_url"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/story_detail_text_size"
+                        android:textColor="@color/storyDetail"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <!--<ScrollView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent">-->
+        <!--</ScrollView>-->
     </LinearLayout>
 </RelativeLayout>

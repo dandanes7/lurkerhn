@@ -8,9 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.TextView;
 import com.dd7.yahn.rest.client.model.Item;
 
 import java.io.BufferedReader;
@@ -22,20 +21,19 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class StoryDetail extends AppCompatActivity {
 
     private static final String ID_FILE = "HnReaderSavedStories";
     private static final String SAVE_STORY = "SaveStory";
-    private Context context;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_detail);
-        context = getApplicationContext();
+        mContext = getApplicationContext();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,7 +58,7 @@ public class StoryDetail extends AppCompatActivity {
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, StoryContent.class);
+                Intent intent = new Intent(mContext, StoryContent.class);
                 intent.putExtra("item", item);
                 startActivity(intent);
             }
@@ -88,7 +86,15 @@ public class StoryDetail extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        //TODO: if askHN or showHN, there are no LINKS!!!!!TREAT CORNERCASE
+
+        TextView storyBy = (TextView) findViewById(R.id.story_by);
+        storyBy.setText(item.getBy());
+        TextView storyUrl= (TextView) findViewById(R.id.story_url);
+        storyUrl.setText(item.getUrl());
+        if (item.getTitle().contains(":HN")) {
+            viewButton.setEnabled(false);
+            openInBrowserButton.setEnabled(false);
+         }
     }
 
     private void saveStory(Item item) {

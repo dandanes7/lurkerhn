@@ -3,7 +3,6 @@ package com.dd7.yahn;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,27 +23,24 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MAX_STORIES_TO_DISPLAY = 30;
-    private Context context;
+    private static final int MAX_STORIES_TO_DISPLAY = 60;
+    private Context mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        context = getApplicationContext();
-
-
+        mContext = getApplicationContext();
+        //TODO: navigation drawer
 
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         final StoryCardAdapter mStoryCardAdapter = new StoryCardAdapter(this);
         mStoryCardAdapter.setOnItemClickListener(new ItemClickListener());
-
         mRecyclerView.setAdapter(mStoryCardAdapter);
-
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -56,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         loadTopStories(mStoryCardAdapter);
-        //TODO: add color to the upvotes text:> 100 is blue, >2000 Green, something like that
     }
 
     private void loadTopStories(final StoryCardAdapter mStoryCardAdapter) {
@@ -71,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(context, "Could not fetch stories, please check if you have an active internet connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Could not fetch stories, please check if you have an active internet connection", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -104,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-            Intent intent = new Intent(context, StoryDetail.class);
+            Intent intent = new Intent(mContext, StoryDetail.class);
             intent.putExtra("item", item);
             startActivity(intent);
         }
@@ -112,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemLongClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-            Intent intent = new Intent(context, StoryContent.class);
+            Intent intent = new Intent(mContext, StoryContent.class);
             intent.putExtra("item", item);
             startActivity(intent);
         }
