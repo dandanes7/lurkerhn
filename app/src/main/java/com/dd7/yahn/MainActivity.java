@@ -12,9 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.dd7.yahn.adapter.StoryCardAdapter;
-import com.dd7.yahn.rest.client.model.Item;
-import com.dd7.yahn.rest.client.service.HackerNewsApi;
-import com.dd7.yahn.rest.client.service.ServiceFactory;
+import com.dd7.yahn.rest.model.Item;
+import com.dd7.yahn.rest.service.HackerNewsApi;
+import com.dd7.yahn.rest.service.ServiceFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mContext = getApplicationContext();
         //TODO: navigation drawer
 
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.story_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final StoryCardAdapter mStoryCardAdapter = new StoryCardAdapter(this);
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemLongClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-            Intent intent = new Intent(mContext, StoryContent.class);
+            Intent intent = new Intent(mContext, StoryContentWebViewer.class);
             intent.putExtra("item", item);
             startActivity(intent);
         }

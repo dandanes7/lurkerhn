@@ -1,7 +1,6 @@
-package com.dd7.yahn.rest.client.service;
+package com.dd7.yahn.rest.service;
 
-import com.dd7.yahn.rest.client.model.ItemList;
-import com.dd7.yahn.rest.client.model.Item;
+import com.dd7.yahn.rest.model.Item;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import rx.Observable;

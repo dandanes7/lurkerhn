@@ -29,7 +29,7 @@
         <activity android:name=".ViewStory">
         </activity>
         <activity
-                android:name=".StoryContent"
+                android:name=".StoryContentWebViewer"
                 android:label="@string/title_activity_story_content"
                 android:parentActivityName=".MainActivity"
                 android:theme="@style/AppTheme.NoActionBar">

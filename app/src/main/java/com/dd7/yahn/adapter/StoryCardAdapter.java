@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.dd7.yahn.R;
-import com.dd7.yahn.rest.client.model.Item;
+import com.dd7.yahn.rest.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.ViewHolder> {
+public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.StoryViewHolder> {
 
     private Context mContext;
     List<Item> mItems;
@@ -33,38 +33,38 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.View
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View rootView = LayoutInflater.from(mContext).inflate(R.layout.recycler_view, null, false);
+    public StoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.story_recycler_view, null, false);
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rootView.setLayoutParams(lp);
-        return new ViewHolder(rootView);
+        return new StoryViewHolder(rootView);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
         Item item = mItems.get(i);
         int score = item.getScore();
         String title = item.getTitle();
-        viewHolder.mStoryTitle.setText(title);
-        viewHolder.mStoryScore.setText(Integer.toString(score));
-        viewHolder.mStoryBy.setText(item.getBy());
-        viewHolder.mStoryTime.setText(item.getTimeFormatted());
-        viewHolder.mStoryUrl.setText(item.getUrlDomainName());
+        storyViewHolder.mStoryTitle.setText(title);
+        storyViewHolder.mStoryScore.setText(Integer.toString(score));
+        storyViewHolder.mStoryBy.setText(item.getBy());
+        storyViewHolder.mStoryTime.setText(item.getTimeFormatted());
+        storyViewHolder.mStoryUrl.setText(item.getUrlDomainName());
 
-        setScoreColor(viewHolder, score);
+        setScoreColor(storyViewHolder, score);
     }
 
-    private void setScoreColor(ViewHolder viewHolder, int score) {
+    private void setScoreColor(StoryViewHolder storyViewHolder, int score) {
         if (score < 50) {
-            viewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under50));
+            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under50));
         } else if (score < 100) {
-            viewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under100));
+            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under100));
         } else if (score < 150) {
-            viewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under150));
+            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under150));
         } else if (score < 250) {
-            viewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under250));
+            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under250));
         } else {
-            viewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.over250));
+            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.over250));
         }
     }
 
@@ -85,14 +85,14 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.View
         void onItemLongClick(int position, View v, List<Item> items);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    class StoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private TextView mStoryScore;
         private TextView mStoryBy;
         private TextView mStoryUrl;
         private TextView mStoryTitle;
         private TextView mStoryTime;
 
-        ViewHolder(View itemView) {
+        StoryViewHolder(View itemView) {
             super(itemView);
             mStoryScore = (TextView) itemView.findViewById(R.id.story_score);
             mStoryBy = (TextView) itemView.findViewById(R.id.story_by);
@@ -115,6 +115,5 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.View
             sClickListener.onItemLongClick(adapterPos, v, mItems);
             return false;
         }
-
     }
 }

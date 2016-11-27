@@ -1,4 +1,4 @@
-package com.dd7.yahn.rest.client.service;
+package com.dd7.yahn.rest.service;
 
 import retrofit.RestAdapter;
 

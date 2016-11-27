@@ -1,4 +1,4 @@
-package com.dd7.yahn.rest.client.model;
+package com.dd7.yahn.rest.model;
 
 public class ItemList {
 

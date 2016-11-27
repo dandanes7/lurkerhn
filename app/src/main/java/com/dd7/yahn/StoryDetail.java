@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.dd7.yahn.rest.client.model.Item;
+import com.dd7.yahn.rest.model.Item;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,6 +27,8 @@ public class StoryDetail extends AppCompatActivity {
 
     private static final String ID_FILE = "HnReaderSavedStories";
     private static final String SAVE_STORY = "SaveStory";
+    public static final String ASK_HN_TAG = "Ask HN:";
+    public static final String TELL_HN_TAG = "Tell HN:";
     private Context mContext;
 
     @Override
@@ -41,6 +43,10 @@ public class StoryDetail extends AppCompatActivity {
         final Item item = (Item) getIntent().getSerializableExtra("item");
         setTitle(item.getTitle());
 
+        setUpButtons(item);
+    }
+
+    private void setUpButtons(final Item item) {
         ImageButton saveButton = (ImageButton) findViewById(R.id.save_story);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,29 +56,28 @@ public class StoryDetail extends AppCompatActivity {
             }
         });
 
-        if (item.getUrl() == null || item.getUrl().isEmpty()) {
-            return;
-        }
-
-        ImageButton viewButton = (ImageButton ) findViewById(R.id.view_story);
-        viewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, StoryContent.class);
-                intent.putExtra("item", item);
-                startActivity(intent);
-            }
-        });
-
         ImageButton shareButton = (ImageButton) findViewById(R.id.share_story);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                intent.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
-                intent.putExtra(Intent.EXTRA_TEXT, item.getUrl());
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, item.getUrl());
+                Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_story));
+                if (shareIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(chooser);
+                }
+            }
+        });
+
+        ImageButton viewButton = (ImageButton) findViewById(R.id.view_story);
+        viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, StoryContentWebViewer.class);
+                intent.putExtra("item", item);
                 startActivity(intent);
             }
         });
@@ -89,12 +94,15 @@ public class StoryDetail extends AppCompatActivity {
 
         TextView storyBy = (TextView) findViewById(R.id.story_by);
         storyBy.setText(item.getBy());
-        TextView storyUrl= (TextView) findViewById(R.id.story_url);
+        TextView storyUrl = (TextView) findViewById(R.id.story_url);
         storyUrl.setText(item.getUrl());
-        if (item.getTitle().contains(":HN")) {
+        if (item.getTitle().startsWith(ASK_HN_TAG) || item.getTitle().startsWith(TELL_HN_TAG)) {
             viewButton.setEnabled(false);
             openInBrowserButton.setEnabled(false);
-         }
+            viewButton.setAlpha(.5f);
+            openInBrowserButton.setAlpha(.5f);
+            storyBy.setText("-");
+        }
     }
 
     private void saveStory(Item item) {
