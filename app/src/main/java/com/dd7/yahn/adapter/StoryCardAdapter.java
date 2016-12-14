@@ -15,7 +15,8 @@ import java.util.List;
 public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.StoryViewHolder> {
 
     private Context mContext;
-    List<Item> mItems;
+    private List<Item> mItems;
+    private static ClickListener sClickListener;
 
     public StoryCardAdapter(Context mContext) {
         this.mContext = mContext;
@@ -73,16 +74,8 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.Stor
         return mItems.size();
     }
 
-    private static ClickListener sClickListener;
-
     public void setOnItemClickListener(ClickListener clickListener) {
         StoryCardAdapter.sClickListener = clickListener;
-    }
-
-    public interface ClickListener {
-        void onItemClick(int position, View v, List<Item> items);
-
-        void onItemLongClick(int position, View v, List<Item> items);
     }
 
     class StoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {

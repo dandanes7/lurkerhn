@@ -107,10 +107,27 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/story_detail_text_size"
                         android:textColor="@color/storyDetail"/>
+
             </LinearLayout>
+
         </RelativeLayout>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerHorizontal="true">
+            <TextView
+                    android:id="@+id/story_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/story_detail_text_size"
+                    android:textColor="@color/storyDetail"/>
+        </LinearLayout>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_centerHorizontal="true"
+                android:background="@color/textCol"/>
         <android.support.v7.widget.RecyclerView
-                android:id="@+id/story_recycler_view"
+                android:id="@+id/comment_recycler_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
     </LinearLayout>

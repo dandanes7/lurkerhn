@@ -8,14 +8,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import com.dd7.yahn.adapter.ClickListener;
 import com.dd7.yahn.adapter.StoryCardAdapter;
 import com.dd7.yahn.rest.model.Item;
 import com.dd7.yahn.rest.service.HackerNewsApi;
 import com.dd7.yahn.rest.service.ServiceFactory;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -43,13 +41,10 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mStoryCardAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
 
-                loadTopStories(mStoryCardAdapter);
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
+            loadTopStories(mStoryCardAdapter);
+            mSwipeRefreshLayout.setRefreshing(false);
         });
         loadTopStories(mStoryCardAdapter);
     }
@@ -57,45 +52,71 @@ public class MainActivity extends AppCompatActivity {
     private void loadTopStories(final StoryCardAdapter mStoryCardAdapter) {
         final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
         mStoryCardAdapter.clear();
-        service.getTopStories().subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<Integer>>() {
-            @Override
-            public void onCompleted() {
 
-            }
+        service.getTopStories()
+                .flatMapIterable(ids -> ids)
+                .take(50)
+                .concatMapEager(id -> service.getItem(id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(item -> mStoryCardAdapter.addData(item));
 
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(mContext, "Could not fetch stories, please check if you have an active internet connection", Toast.LENGTH_SHORT).show();
-            }
+//                service.getTopStories()
+//                .flatMapIterable(ids -> ids).take(50)
+//                .concatMapEager(new Func1<Integer, Observable<Item>>() {
+//                    @Override
+//                    public Observable<Item> call(Integer integer) {
+//                        return service.getItem(integer);
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<Item>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        //
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Item item) {
+//                        mStoryCardAdapter.addData(item);
+//                    }
+//                });
 
-            @Override
-            public void onNext(List<Integer> integers) {
-                for (Integer id : integers.subList(0, MAX_STORIES_TO_DISPLAY)) {
-                    service.getItem(id)
-                            .subscribeOn(Schedulers.newThread())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Subscriber<Item>() {
-                                @Override
-                                public void onCompleted() {
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.e("Some error", e.getMessage());
-                                }
-
-                                @Override
-                                public void onNext(Item item) {
-                                    mStoryCardAdapter.addData(item);
-                                }
-                            });
-                }
-            }
-        });
+//        service.getTopStories()
+//                .flatMapIterable(ids -> ids).take(50)
+//                .concatMapEager(new Func1<Integer, Observable<Item>>() {
+//                    @Override
+//                    public Observable<Item> call(Integer integer) {
+//                        return service.getItem(integer);
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<Item>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        //
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Item item) {
+//                        mStoryCardAdapter.addData(item);
+//                    }
+//                });
     }
 
-    private class ItemClickListener implements StoryCardAdapter.ClickListener {
+    private class ItemClickListener implements ClickListener {
         @Override
         public void onItemClick(int position, View v, List<Item> items) {
             Item item = items.get(position);

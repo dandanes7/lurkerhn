@@ -5,12 +5,22 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import com.dd7.yahn.adapter.ClickListener;
+import com.dd7.yahn.adapter.CommentCardAdapter;
 import com.dd7.yahn.rest.model.Item;
+import com.dd7.yahn.rest.service.HackerNewsApi;
+import com.dd7.yahn.rest.service.ServiceFactory;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,15 +31,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class StoryDetail extends AppCompatActivity {
 
     private static final String ID_FILE = "HnReaderSavedStories";
     private static final String SAVE_STORY = "SaveStory";
-    public static final String ASK_HN_TAG = "Ask HN:";
-    public static final String TELL_HN_TAG = "Tell HN:";
+    private static final String ASK_HN_TAG = "Ask HN:";
+    private static final String TELL_HN_TAG = "Tell HN:";
+
     private Context mContext;
+    private Item mStory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +53,34 @@ public class StoryDetail extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final Item item = (Item) getIntent().getSerializableExtra("item");
-        setTitle(item.getTitle());
+        mStory = (Item) getIntent().getSerializableExtra("item");
+        setTitle(mStory.getTitle());
+        setUpButtonsAndAddContentToTextViews(mStory);
 
-        setUpButtons(item);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.comment_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        final CommentCardAdapter mCommentCardAdapter = new CommentCardAdapter(this);
+        mRecyclerView.setAdapter(mCommentCardAdapter);
+
+        final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
+
+//        Observable.from(mStory.getKids())
+//                .concatMapEager(id -> service.getItem(id))
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(item -> mCommentCardAdapter.addData(item));
+
+        Observable.from(mStory.getKids())
+                .concatMapEager(id -> service.getItem(id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(item -> mCommentCardAdapter.addData(item));
+
     }
 
-    private void setUpButtons(final Item item) {
+    private void setUpButtonsAndAddContentToTextViews(final Item item) {
         ImageButton saveButton = (ImageButton) findViewById(R.id.save_story);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +96,6 @@ public class StoryDetail extends AppCompatActivity {
             public void onClick(View v) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
                 shareIntent.putExtra(Intent.EXTRA_TEXT, item.getUrl());
                 Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_story));
@@ -92,6 +125,7 @@ public class StoryDetail extends AppCompatActivity {
             }
         });
 
+
         TextView storyBy = (TextView) findViewById(R.id.story_by);
         storyBy.setText(item.getBy());
         TextView storyUrl = (TextView) findViewById(R.id.story_url);
@@ -101,7 +135,10 @@ public class StoryDetail extends AppCompatActivity {
             openInBrowserButton.setEnabled(false);
             viewButton.setAlpha(.5f);
             openInBrowserButton.setAlpha(.5f);
-            storyBy.setText("-");
+            storyUrl.setText("-");
+            //This adds Ask HN: description
+            TextView storyText = (TextView) findViewById(R.id.story_text);
+            storyText.setText(Html.fromHtml(item.getText()));
         }
     }
 
@@ -137,6 +174,19 @@ public class StoryDetail extends AppCompatActivity {
             Log.d(SAVE_STORY, "Stories saved:" + Arrays.toString(savedStories.toArray()));
         } catch (IOException e) {
             Log.e(SAVE_STORY, "Could not load story id, " + e.getMessage());
+        }
+    }
+
+    private class ItemClickListener implements ClickListener {
+
+        @Override
+        public void onItemClick(int position, View v, List<Item> items) {
+
+        }
+
+        @Override
+        public void onItemLongClick(int position, View v, List<Item> items) {
+            //Todo: here i could actually share a comment url.
         }
     }
 }
