@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.dd7.yahn.adapter.ClickListener;
 import com.dd7.yahn.adapter.CommentCardAdapter;
 import com.dd7.yahn.rest.model.Item;
@@ -20,6 +21,7 @@ import com.dd7.yahn.rest.service.HackerNewsApi;
 import com.dd7.yahn.rest.service.ServiceFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import java.io.BufferedReader;
@@ -29,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +46,7 @@ public class StoryDetail extends AppCompatActivity {
 
     private Context mContext;
     private Item mStory;
+    private HackerNewsApi service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,7 @@ public class StoryDetail extends AppCompatActivity {
         final CommentCardAdapter mCommentCardAdapter = new CommentCardAdapter(this);
         mRecyclerView.setAdapter(mCommentCardAdapter);
 
-        final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
+        service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
 
 //        Observable.from(mStory.getKids())
 //                .concatMapEager(id -> service.getItem(id))
@@ -72,12 +76,28 @@ public class StoryDetail extends AppCompatActivity {
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe(item -> mCommentCardAdapter.addData(item));
 
-        Observable.from(mStory.getKids())
-                .concatMapEager(id -> service.getItem(id))
+        //TODO: First, the nullpointer pops because root item does not have text
+        //TODO: Secondly, the uppermost comments dont have kids, so gotta make sure i check for nulls there
+
+        mStory.setText("");
+        Observable.from(mStory.getKids()).concatMapEager(id -> service.getItem(id))
+                .concatMapEager(firstRowKids -> getComments(firstRowKids))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(item -> mCommentCardAdapter.addData(item));
+    }
 
+    public Observable<Item> getComments(Item item) {
+        if (item.getKids() == null || item.getKids().isEmpty()) {
+            return Observable.just(item);
+        } else {
+            return Observable.concatEager(
+                    Observable.just(item),
+                    Observable.from(item.getKids())
+                            .concatMapEager(id -> service.getItem(id))
+                            .flatMap(it -> getComments(it))
+            );
+        }
     }
 
     private void setUpButtonsAndAddContentToTextViews(final Item item) {
