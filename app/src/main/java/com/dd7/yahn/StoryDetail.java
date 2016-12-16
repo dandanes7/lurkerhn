@@ -95,7 +95,7 @@ public class StoryDetail extends AppCompatActivity {
                     Observable.just(item),
                     Observable.from(item.getKids())
                             .concatMapEager(id -> service.getItem(id))
-                            .flatMap(it -> getComments(it))
+                            .concatMapEager(it -> getComments(it))
             );
         }
     }

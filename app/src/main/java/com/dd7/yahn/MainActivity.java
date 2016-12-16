@@ -8,12 +8,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import com.dd7.yahn.adapter.ClickListener;
 import com.dd7.yahn.adapter.StoryCardAdapter;
 import com.dd7.yahn.rest.model.Item;
 import com.dd7.yahn.rest.service.HackerNewsApi;
 import com.dd7.yahn.rest.service.ServiceFactory;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -59,7 +61,23 @@ public class MainActivity extends AppCompatActivity {
                 .concatMapEager(id -> service.getItem(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(item -> mStoryCardAdapter.addData(item));
+//                .subscribe(item -> mStoryCardAdapter.addData(item));
+                .subscribe(new Subscriber<Item>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("NETWORKERROR", "Something went wrong" + e.getMessage(), e);
+                    }
+
+                    @Override
+                    public void onNext(Item item) {
+                        mStoryCardAdapter.addData(item);
+                    }
+                });
 
 //                service.getTopStories()
 //                .flatMapIterable(ids -> ids).take(50)
