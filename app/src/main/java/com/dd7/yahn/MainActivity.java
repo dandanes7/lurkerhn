@@ -13,11 +13,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.dd7.yahn.adapter.ClickListener;
 import com.dd7.yahn.adapter.StoryCardAdapter;
 import com.dd7.yahn.rest.model.Item;
 import com.dd7.yahn.rest.client.HackerNewsApiClient;
 import com.dd7.yahn.rest.client.ClientFactory;
+import com.dd7.yahn.service.PreferenceService;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -26,8 +28,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String[] CATEGORIES = {"Best","Newest", "Settings"};
-    private static final int MAX_STORIES_TO_DISPLAY = 50;
+    private final String[] CATEGORIES = {"Saved Stories", "Settings"};
+    private int MAX_STORIES_TO_DISPLAY = 50;
+
     private Context mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private DrawerLayout mDrawerLayout;
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        PreferenceService preferenceService = new PreferenceService(mContext);
+        MAX_STORIES_TO_DISPLAY = preferenceService.getMaxStoriesSetting();
 
         ListView mDrawerList = (ListView) findViewById(R.id.drawerList);
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, CATEGORIES));
@@ -109,7 +115,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            Intent intent = new Intent(mContext, )
+            String name = "com.dd7.yahn." + CATEGORIES[position] + "Activity";
+            try {
+                Intent intent = new Intent(mContext, Class.forName(name));
+                startActivity(intent);
+            } catch (ClassNotFoundException e) {
+                Toast.makeText(mContext, "Could not find activity "+name, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
