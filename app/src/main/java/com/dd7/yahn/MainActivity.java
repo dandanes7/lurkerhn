@@ -3,18 +3,21 @@ package com.dd7.yahn;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import com.dd7.yahn.adapter.ClickListener;
 import com.dd7.yahn.adapter.StoryCardAdapter;
 import com.dd7.yahn.rest.model.Item;
-import com.dd7.yahn.rest.service.HackerNewsApi;
-import com.dd7.yahn.rest.service.ServiceFactory;
+import com.dd7.yahn.rest.client.HackerNewsApiClient;
+import com.dd7.yahn.rest.client.ClientFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -23,17 +26,22 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MAX_STORIES_TO_DISPLAY = 60;
+    private final String[] CATEGORIES = {"Best","Newest", "Settings"};
+    private static final int MAX_STORIES_TO_DISPLAY = 50;
     private Context mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
-        //TODO: navigation drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        ListView mDrawerList = (ListView) findViewById(R.id.drawerList);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, CATEGORIES));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.story_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -44,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-
             loadTopStories(mStoryCardAdapter);
             mSwipeRefreshLayout.setRefreshing(false);
         });
@@ -52,12 +59,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadTopStories(final StoryCardAdapter mStoryCardAdapter) {
-        final HackerNewsApi service = ServiceFactory.createRetrofitService(HackerNewsApi.class, HackerNewsApi.HNENDPOINT);
+        final HackerNewsApiClient service = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
         mStoryCardAdapter.clear();
 
         service.getTopStories()
                 .flatMapIterable(ids -> ids)
-                .take(50)
+                .take(MAX_STORIES_TO_DISPLAY)
                 .concatMapEager(id -> service.getItem(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -78,60 +85,6 @@ public class MainActivity extends AppCompatActivity {
                         mStoryCardAdapter.addData(item);
                     }
                 });
-
-//                service.getTopStories()
-//                .flatMapIterable(ids -> ids).take(50)
-//                .concatMapEager(new Func1<Integer, Observable<Item>>() {
-//                    @Override
-//                    public Observable<Item> call(Integer integer) {
-//                        return service.getItem(integer);
-//                    }
-//                })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<Item>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        //
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Item item) {
-//                        mStoryCardAdapter.addData(item);
-//                    }
-//                });
-
-//        service.getTopStories()
-//                .flatMapIterable(ids -> ids).take(50)
-//                .concatMapEager(new Func1<Integer, Observable<Item>>() {
-//                    @Override
-//                    public Observable<Item> call(Integer integer) {
-//                        return service.getItem(integer);
-//                    }
-//                })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<Item>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        //
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Item item) {
-//                        mStoryCardAdapter.addData(item);
-//                    }
-//                });
     }
 
     private class ItemClickListener implements ClickListener {
@@ -149,6 +102,14 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(mContext, StoryContentWebViewer.class);
             intent.putExtra("item", item);
             startActivity(intent);
+        }
+    }
+
+    public class DrawerItemClickListener implements ListView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            Intent intent = new Intent(mContext, )
         }
     }
 }

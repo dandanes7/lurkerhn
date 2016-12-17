@@ -17,7 +17,6 @@ public class CommentCardAdapter extends RecyclerView.Adapter<CommentCardAdapter.
 
     private Context mContext;
     private List<Item> mItems;
-    private static ClickListener sClickListener;
 
     public CommentCardAdapter(Context mContext) {
         this.mContext = mContext;
@@ -45,9 +44,11 @@ public class CommentCardAdapter extends RecyclerView.Adapter<CommentCardAdapter.
     @Override
     public void onBindViewHolder(CommentViewHolder commentViewHolder, int i) {
         Item item = mItems.get(i);
-        commentViewHolder.mCommentAuthor.setText(item.getBy());
-        commentViewHolder.mCommentText.setText(Html.fromHtml(item.getText()));
-        commentViewHolder.mCommentTime.setText(item.getTimeFormatted());
+        if (item.getText() != null) {
+            commentViewHolder.mCommentAuthor.setText(item.getBy());
+            commentViewHolder.mCommentText.setText(Html.fromHtml(item.getText()));
+            commentViewHolder.mCommentTime.setText(item.getTimeFormatted());
+        }
     }
 
     @Override
@@ -55,11 +56,7 @@ public class CommentCardAdapter extends RecyclerView.Adapter<CommentCardAdapter.
         return mItems.size();
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
-        CommentCardAdapter.sClickListener = clickListener;
-    }
-
-    class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    class CommentViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mCommentText;
         private TextView mCommentAuthor;
@@ -70,19 +67,6 @@ public class CommentCardAdapter extends RecyclerView.Adapter<CommentCardAdapter.
             mCommentAuthor = (TextView) itemView.findViewById(R.id.comment_author);
             mCommentText = (TextView) itemView.findViewById(R.id.comment_text);
             mCommentTime = (TextView) itemView.findViewById(R.id.comment_time);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int adapterPos = getAdapterPosition();
-            sClickListener.onItemClick(adapterPos, v, mItems);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            int adapterPos = getAdapterPosition();
-            sClickListener.onItemLongClick(adapterPos, v, mItems);
-            return false;
         }
     }
 }

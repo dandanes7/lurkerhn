@@ -26,8 +26,6 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.dd7.yahn.MainActivity"/>
         </activity>
-        <activity android:name=".ViewStory">
-        </activity>
         <activity
                 android:name=".StoryContentWebViewer"
                 android:label="@string/title_activity_story_content"
