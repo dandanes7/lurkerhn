@@ -2,8 +2,6 @@ package com.dd7.yahn;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -31,16 +29,19 @@ public class SettingsActivity extends AppCompatActivity {
         mEditTextMaxStories = (EditText) findViewById(R.id.max_story_no);
         mEditTextMaxStories.setText(String.valueOf(mPreferenceService.getMaxStoriesSetting()));
 
-
         ImageButton fab = (ImageButton) findViewById(R.id.save_settings);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int val = Integer.parseInt(mEditTextMaxStories.getText().toString());
-                mPreferenceService.saveMaxStoriesSetting(val);
-                Toast.makeText(mContext, "Saved",Toast.LENGTH_SHORT).show();
+                savePreferences();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void savePreferences() {
+        int val = Integer.parseInt(mEditTextMaxStories.getText().toString());
+        mPreferenceService.saveMaxStoriesSetting(val);
+        Toast.makeText(mContext, "Saved",Toast.LENGTH_SHORT).show();
     }
 }
