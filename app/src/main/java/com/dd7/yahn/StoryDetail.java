@@ -51,34 +51,13 @@ public class StoryDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_detail);
         mContext = getApplicationContext();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setUpToolbarAndGetStoryFromIntent();
 
-        mStory = (Item) getIntent().getSerializableExtra("item");
-        setTitle(mStory.getTitle());
-        setUpButtonsAndAddContentToTextViews(mStory);
-
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.comment_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        final CommentCardAdapter mCommentCardAdapter = new CommentCardAdapter(this);
-        mRecyclerView.setAdapter(mCommentCardAdapter);
-
+        final CommentCardAdapter mCommentCardAdapter = prepareRecyclerViewAndGetCardAdapter();
         service = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
 
-//        Observable.from(mStory.getKids())
-//                .concatMapEager(id -> service.getItem(id))
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(item -> mCommentCardAdapter.addData(item));
-
-        //TODO: First, the nullpointer pops because root item does not have text
-        //TODO: Secondly, the uppermost comments dont have kids, so gotta make sure i check for nulls there
-
         Observable.from(mStory.getKids()).concatMapEager(id -> service.getItem(id))
-                .concatMapEager(firstRowKids -> getComments(firstRowKids))
+                .concatMapEager(firstRowKid -> getComments(firstRowKid))
                 .filter(item -> {
                     if (item != null && item.getText() != null) {
                         return true;
@@ -104,6 +83,26 @@ public class StoryDetail extends AppCompatActivity {
                         mCommentCardAdapter.addData(item);
                     }
                 });
+    }
+
+    private void setUpToolbarAndGetStoryFromIntent() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mStory = (Item) getIntent().getSerializableExtra("item");
+        setTitle(mStory.getTitle());
+        setUpButtonsAndAddContentToTextViews(mStory);
+    }
+
+    private CommentCardAdapter prepareRecyclerViewAndGetCardAdapter() {
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.comment_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        final CommentCardAdapter mCommentCardAdapter = new CommentCardAdapter(this);
+        mRecyclerView.setAdapter(mCommentCardAdapter);
+        return mCommentCardAdapter;
     }
 
     public Observable<Item> getComments(Item item) {
@@ -144,23 +143,17 @@ public class StoryDetail extends AppCompatActivity {
         });
 
         ImageButton viewButton = (ImageButton) findViewById(R.id.view_story);
-        viewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, StoryContentWebViewer.class);
-                intent.putExtra("item", item);
-                startActivity(intent);
-            }
+        viewButton.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, StoryContentWebViewer.class);
+            intent.putExtra("item", item);
+            startActivity(intent);
         });
 
         ImageButton openInBrowserButton = (ImageButton) findViewById(R.id.open_story);
-        openInBrowserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(item.getUrl()));
-                startActivity(intent);
-            }
+        openInBrowserButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(item.getUrl()));
+            startActivity(intent);
         });
 
 
@@ -177,19 +170,6 @@ public class StoryDetail extends AppCompatActivity {
             //This adds Ask HN: description
             TextView storyText = (TextView) findViewById(R.id.story_text);
             storyText.setText(Html.fromHtml(item.getText()));
-        }
-    }
-
-    private class ItemClickListener implements ClickListener {
-
-        @Override
-        public void onItemClick(int position, View v, List<Item> items) {
-
-        }
-
-        @Override
-        public void onItemLongClick(int position, View v, List<Item> items) {
-            //Todo: here i could actually share a comment url.
         }
     }
 }

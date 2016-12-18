@@ -30,12 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
         mEditTextMaxStories.setText(String.valueOf(mPreferenceService.getMaxStoriesSetting()));
 
         ImageButton fab = (ImageButton) findViewById(R.id.save_settings);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                savePreferences();
-            }
-        });
+        fab.setOnClickListener(view -> savePreferences());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
