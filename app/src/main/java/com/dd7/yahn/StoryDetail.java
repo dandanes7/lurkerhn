@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.dd7.yahn.adapter.ClickListener;
 import com.dd7.yahn.adapter.CommentCardAdapter;
 import com.dd7.yahn.rest.model.Item;
@@ -45,7 +46,6 @@ public class StoryDetail extends AppCompatActivity {
     private Context mContext;
     private Item mStory;
     private HackerNewsApiClient service;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,8 +124,7 @@ public class StoryDetail extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                readSavedStories();
-                saveStory(item);
+                Toast.makeText(mContext, "Save stories feature not implemented yet", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -178,41 +177,6 @@ public class StoryDetail extends AppCompatActivity {
             //This adds Ask HN: description
             TextView storyText = (TextView) findViewById(R.id.story_text);
             storyText.setText(Html.fromHtml(item.getText()));
-        }
-    }
-
-    private void saveStory(Item item) {
-        if (!savedStories.contains(String.valueOf(item.getId()))) {
-            FileOutputStream outputStream = null;
-            try {
-                outputStream = openFileOutput(ID_FILE, Context.MODE_APPEND);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-                outputStreamWriter.append(String.valueOf(item.getId()));
-                outputStreamWriter.append("\n");
-                outputStreamWriter.close();
-            } catch (Exception e) {
-                Log.e(SAVE_STORY, "Could not save story id, " + e.getMessage());
-            }
-        }
-    }
-
-    private Set<String> savedStories;
-
-    private void readSavedStories() {
-        BufferedReader input = null;
-        File file = null;
-        savedStories = new HashSet<>();
-        try {
-            file = new File(getFilesDir(), ID_FILE);
-
-            input = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-            String line;
-            while ((line = input.readLine()) != null) {
-                savedStories.add(line);
-            }
-            Log.d(SAVE_STORY, "Stories saved:" + Arrays.toString(savedStories.toArray()));
-        } catch (IOException e) {
-            Log.e(SAVE_STORY, "Could not load story id, " + e.getMessage());
         }
     }
 
