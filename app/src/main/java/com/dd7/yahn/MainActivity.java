@@ -39,6 +39,7 @@ public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
+    private HackerNewsApiClient mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
 
         getMaxStoriesToDisplayFromPrefs();
         prepareDrawerList();
@@ -54,13 +56,13 @@ public class MainActivity extends ActionBarActivity {
         prepareDrawerToggle();
 
         prepareSwipeRefreshLayout(mStoryCardAdapter);
-        loadTopStories(mStoryCardAdapter);
+        loadTopStories(mStoryCardAdapter, mService);
     }
 
-    private void prepareSwipeRefreshLayout(StoryCardAdapter mStoryCardAdapter) {
+    private void prepareSwipeRefreshLayout(StoryCardAdapter storyCardAdapter) {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            loadTopStories(mStoryCardAdapter);
+            loadTopStories(storyCardAdapter, mService);
             mSwipeRefreshLayout.setRefreshing(false);
         });
     }
@@ -105,16 +107,14 @@ public class MainActivity extends ActionBarActivity {
                 getSupportActionBar().setTitle(mActivityTitle);
                 invalidateOptionsMenu();
             }
-
         };
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void loadTopStories(final StoryCardAdapter mStoryCardAdapter) {
-        final HackerNewsApiClient service = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
-        mStoryCardAdapter.clear();
+    private void loadTopStories(final StoryCardAdapter storyCardAdapter, HackerNewsApiClient service) {
+        storyCardAdapter.clear();
         service.getTopStories()
                 .flatMapIterable(ids -> ids)
                 .take(MAX_STORIES_TO_DISPLAY)
@@ -134,7 +134,7 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public void onNext(Item item) {
-                        mStoryCardAdapter.addData(item);
+                        storyCardAdapter.addData(item);
                     }
                 });
     }

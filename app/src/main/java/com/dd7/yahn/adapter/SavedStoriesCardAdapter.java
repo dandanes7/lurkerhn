@@ -12,7 +12,7 @@ import com.dd7.yahn.rest.model.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SavedStoriesCardAdapter extends RecyclerView.Adapter<SavedStoriesCardAdapter.StoryViewHolder> {
+public class SavedStoriesCardAdapter extends RecyclerView.Adapter<SavedStoriesCardAdapter.SavedStoriesViewHolder> {
 
     private Context mContext;
     private List<Item> mItems;
@@ -34,23 +34,39 @@ public class SavedStoriesCardAdapter extends RecyclerView.Adapter<SavedStoriesCa
     }
 
     @Override
-    public StoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View rootView = LayoutInflater.from(mContext).inflate(R.layout.activity_saved_stories, null, false);
+    public SavedStoriesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.saved_stories_recycler_view, null, false);
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rootView.setLayoutParams(lp);
-        return new StoryViewHolder(rootView);
+        return new SavedStoriesViewHolder(rootView);
     }
 
     @Override
-    public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
+    public void onBindViewHolder(SavedStoriesViewHolder savedStoriesViewHolder, int i) {
         Item item = mItems.get(i);
         int score = item.getScore();
         String title = item.getTitle();
-        storyViewHolder.mStoryTitle.setText(title);
-        storyViewHolder.mStoryScore.setText(Integer.toString(score));
-        storyViewHolder.mStoryBy.setText(item.getBy());
-        storyViewHolder.mStoryTime.setText(item.getTimeFormatted());
-        storyViewHolder.mStoryUrl.setText(item.getUrlDomainName());
+        savedStoriesViewHolder.mStoryTitle.setText(title);
+        savedStoriesViewHolder.mStoryScore.setText(Integer.toString(score));
+        savedStoriesViewHolder.mStoryBy.setText(item.getBy());
+        savedStoriesViewHolder.mStoryTime.setText(item.getTimeFormatted());
+        savedStoriesViewHolder.mStoryUrl.setText(item.getUrlDomainName());
+
+        setScoreColor(savedStoriesViewHolder, score);
+    }
+
+    private void setScoreColor(SavedStoriesViewHolder savedStoriesViewHolder, int score) {
+        if (score < 50) {
+            savedStoriesViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under50));
+        } else if (score < 100) {
+            savedStoriesViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under100));
+        } else if (score < 150) {
+            savedStoriesViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under150));
+        } else if (score < 250) {
+            savedStoriesViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under250));
+        } else {
+            savedStoriesViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.over250));
+        }
     }
 
     @Override
@@ -62,20 +78,20 @@ public class SavedStoriesCardAdapter extends RecyclerView.Adapter<SavedStoriesCa
         SavedStoriesCardAdapter.sClickListener = clickListener;
     }
 
-    class StoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    class SavedStoriesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private TextView mStoryScore;
         private TextView mStoryBy;
         private TextView mStoryUrl;
         private TextView mStoryTitle;
         private TextView mStoryTime;
 
-        StoryViewHolder(View itemView) {
+        SavedStoriesViewHolder(View itemView) {
             super(itemView);
-            mStoryScore = (TextView) itemView.findViewById(R.id.story_score);
-            mStoryBy = (TextView) itemView.findViewById(R.id.story_by);
-            mStoryUrl = (TextView) itemView.findViewById(R.id.story_url);
-            mStoryTitle = (TextView) itemView.findViewById(R.id.story_title);
-            mStoryTime = (TextView) itemView.findViewById(R.id.story_time);
+            mStoryScore = (TextView) itemView.findViewById(R.id.saved_story_score);
+            mStoryBy = (TextView) itemView.findViewById(R.id.saved_story_by);
+            mStoryUrl = (TextView) itemView.findViewById(R.id.saved_story_url);
+            mStoryTitle = (TextView) itemView.findViewById(R.id.saved_story_title);
+            mStoryTime = (TextView) itemView.findViewById(R.id.saved_story_time);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }

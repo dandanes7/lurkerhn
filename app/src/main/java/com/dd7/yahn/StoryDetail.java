@@ -2,6 +2,7 @@ package com.dd7.yahn;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,39 +15,26 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.dd7.yahn.adapter.ClickListener;
 import com.dd7.yahn.adapter.CommentCardAdapter;
-import com.dd7.yahn.rest.model.Item;
-import com.dd7.yahn.rest.client.HackerNewsApiClient;
 import com.dd7.yahn.rest.client.ClientFactory;
-import com.dd7.yahn.service.SavedStoriesService;
+import com.dd7.yahn.rest.client.HackerNewsApiClient;
+import com.dd7.yahn.rest.model.Item;
+import com.dd7.yahn.service.SavedStoriesDatabaseService;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 public class StoryDetail extends AppCompatActivity {
 
-    private static final String ID_FILE = "HnReaderSavedStories";
-    private static final String SAVE_STORY = "SaveStory";
     private static final String ASK_HN_TAG = "Ask HN:";
     private static final String TELL_HN_TAG = "Tell HN:";
 
     private Context mContext;
     private Item mStory;
-    private HackerNewsApiClient service;
+    private HackerNewsApiClient mService;
+    private SavedStoriesDatabaseService mDatabaseService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +43,10 @@ public class StoryDetail extends AppCompatActivity {
         setUpToolbarAndGetStoryFromIntent();
 
         final CommentCardAdapter mCommentCardAdapter = prepareRecyclerViewAndGetCardAdapter();
-        service = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
+        mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
 
-        Observable.from(mStory.getKids()).concatMapEager(id -> service.getItem(id))
+
+        Observable.from(mStory.getKids()).concatMapEager(id -> mService.getItem(id))
                 .concatMapEager(firstRowKid -> getComments(firstRowKid))
                 .filter(item -> {
                     if (item != null && item.getText() != null) {
@@ -113,7 +102,7 @@ public class StoryDetail extends AppCompatActivity {
             return Observable.concatEager(
                     Observable.just(item),
                     Observable.from(item.getKids())
-                            .concatMapEager(id -> service.getItem(id))
+                            .concatMapEager(id -> mService.getItem(id))
                             .concatMapEager(it -> getComments(it))
             );
         }
@@ -121,15 +110,19 @@ public class StoryDetail extends AppCompatActivity {
 
     private void setUpButtonsAndAddContentToTextViews(final Item item) {
         ImageButton saveButton = (ImageButton) findViewById(R.id.save_story);
+        mDatabaseService = new SavedStoriesDatabaseService(mContext);
+        if (mDatabaseService.exists(String.valueOf(item.getId()))) {
+            saveButton.setColorFilter(Color.argb(255, 255, 255, 255));
+            saveButton.setEnabled(false);
+        }
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(mContext, "Save stories feature not implemented yet", Toast.LENGTH_SHORT).show();
                 try {
-                    SavedStoriesService savedStoriesService = new SavedStoriesService(mContext);
-                    savedStoriesService.saveItem(item);
+                    SavedStoriesDatabaseService databaseService = new SavedStoriesDatabaseService(mContext);
+                    databaseService.save(item);
                     Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Toast.makeText(mContext, "Could not save story", Toast.LENGTH_SHORT).show();
                 }
             }
