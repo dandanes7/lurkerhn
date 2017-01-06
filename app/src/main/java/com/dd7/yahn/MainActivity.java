@@ -31,7 +31,7 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    private final String[] CATEGORIES = {"Saved Stories", "Settings"};
+    private final String[] CATEGORIES = {"SavedStories", "Settings"};
     private int MAX_STORIES_TO_DISPLAY = 50;
 
     private Context mContext;

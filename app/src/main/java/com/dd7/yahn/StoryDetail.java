@@ -19,6 +19,7 @@ import com.dd7.yahn.adapter.CommentCardAdapter;
 import com.dd7.yahn.rest.model.Item;
 import com.dd7.yahn.rest.client.HackerNewsApiClient;
 import com.dd7.yahn.rest.client.ClientFactory;
+import com.dd7.yahn.service.SavedStoriesService;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -123,7 +124,14 @@ public class StoryDetail extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Save stories feature not implemented yet", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "Save stories feature not implemented yet", Toast.LENGTH_SHORT).show();
+                try {
+                    SavedStoriesService savedStoriesService = new SavedStoriesService(mContext);
+                    savedStoriesService.saveItem(item);
+                    Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    Toast.makeText(mContext, "Could not save story", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -16,7 +16,7 @@ public class SavedStoriesService {
     private static final String SAVED_ITEMS = "SAVED_ITEMS";
 
     private Context mContext;
-    private Gson mGson;
+    private String separator = System.getProperty("line.separator");
 
 
     public SavedStoriesService(Context mContext) {
@@ -24,42 +24,62 @@ public class SavedStoriesService {
     }
 
     public void saveItem(Item item) throws IOException {
-        List<Item> items;
-        try {
-            items = getItems();
-        } catch (ClassNotFoundException e) {
-            items = new ArrayList<>();
-            Log.e("SAVEITEMS","Could not get saved items:" + e.getMessage());
+        String id = String.valueOf(item.getId());
+
+        if (alreadySaved(id)) {
+            return;
         }
-        items.add(item);
-        FileOutputStream fileOutputStream = mContext.openFileOutput(FILE_SAVED_ITEMS, Context.MODE_PRIVATE);
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        objectOutputStream.writeObject(items);
+
+        FileOutputStream fileOutputStream = mContext.openFileOutput(FILE_SAVED_ITEMS, Context.MODE_APPEND);
+        OutputStreamWriter objectOutputStream = new OutputStreamWriter(fileOutputStream);
+        objectOutputStream.append(id);
+        objectOutputStream.append(separator);
         objectOutputStream.close();
         fileOutputStream.close();
-
     }
 
     public void removeItem(Item item) throws IOException {
-        List<Item> items;
-        try {
-            items = getItems();
-            items.remove(item);
-        } catch (ClassNotFoundException e) {
-            Log.e("SAVEITEMS","Could not get saved items:" + e.getMessage());
+        String id = String.valueOf(item.getId());
+
+        List<String> existing = getItems();
+        existing.remove(id);
+
+        FileOutputStream fileOutputStream = mContext.openFileOutput(FILE_SAVED_ITEMS, Context.MODE_PRIVATE);
+        OutputStreamWriter objectOutputStream = new OutputStreamWriter(fileOutputStream);
+        objectOutputStream.append("");
+        objectOutputStream.flush();
+
+        for (String line : existing) {
+            objectOutputStream.write(line);
         }
+
+        objectOutputStream.close();
+        fileOutputStream.close();
     }
 
-    public List<Item> getItems() throws IOException, ClassNotFoundException {
+    public List<String> getItems() throws IOException {
+        List<String> savedIds = new ArrayList<>();
+
         FileInputStream fileInputStream = mContext.openFileInput(FILE_SAVED_ITEMS);
-        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        List<Item> items = (List<Item>) objectInputStream.readObject();
-        objectInputStream.close();
+        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        String line;
+        while ( (line = bufferedReader.readLine()) != null) {
+            savedIds.add(line);
+        }
+
+        bufferedReader.close();
+        inputStreamReader.close();
         fileInputStream.close();
-        return items;
+        return savedIds;
     }
 
-    private void getSavedItems() {
-
+    private boolean alreadySaved(String id) throws IOException{
+        List<String> existing = getItems();
+        if (existing.contains(id)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
