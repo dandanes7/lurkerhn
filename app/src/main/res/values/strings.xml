@@ -10,4 +10,10 @@
     <string name="drawer_close">Close Drawer</string>
     <string name="share_story">Share this story</string>
     <string name="max_story_desc_text">Set the number of stories shown</string>
+    <string name="pref_cat_desc_text">Set the preferred category</string>
+    <string-array name="categories">
+        <item>Top</item>
+        <item>Best</item>
+        <item>New</item>
+    </string-array>
 </resources>

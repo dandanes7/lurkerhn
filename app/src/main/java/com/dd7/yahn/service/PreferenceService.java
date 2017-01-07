@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 
 public class PreferenceService {
 
-    private static final String MAX_STORIES = "MAX_STORIES";
     private static final String FILE_PREFS = "file_prefs";
-    private static final int MAX_STORIES_TO_DISPLAY_DEFAULT = 50;
+    private static final String MAX_STORIES = "MAX_STORIES";
+    private static final String PREFERRED_CAT = "PREFERRED_CAT";
+
+    private static final String PREFERRED_CAT_DEFAULT = "TOP";
+    private static final int MAX_STORIES_DEFAULT = 50;
 
     private static SharedPreferences sSharedPreferences;
     private Context mContext;
@@ -23,8 +26,17 @@ public class PreferenceService {
         editor.commit();
     }
 
-    public int getMaxStoriesSetting() {
-        return sSharedPreferences.getInt(MAX_STORIES, MAX_STORIES_TO_DISPLAY_DEFAULT);
+    public void savePreferredCateogory(String value) {
+        SharedPreferences.Editor editor = sSharedPreferences.edit();
+        editor.putString(PREFERRED_CAT, value);
+        editor.commit();
     }
 
+    public int getMaxStoriesSetting() {
+        return sSharedPreferences.getInt(MAX_STORIES, MAX_STORIES_DEFAULT);
+    }
+
+    public String getPreferredCategory() {
+        return sSharedPreferences.getString(PREFERRED_CAT, PREFERRED_CAT_DEFAULT);
+    }
 }

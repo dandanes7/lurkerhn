@@ -14,12 +14,12 @@ public interface HackerNewsApiClient {
     @GET("/topstories.json")
     Observable<List<Integer>> getTopStories();
 
-
     @GET("/beststories.json")
     Observable<List<Integer>> getBestStories();
 
+    @GET("/newstories.json")
+    Observable<List<Integer>> getNewStories();
 
     @GET("/item/{id}.json")
     Observable<Item> getItem(@Path("id") int id);
-
 }

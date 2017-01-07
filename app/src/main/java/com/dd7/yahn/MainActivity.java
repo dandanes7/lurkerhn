@@ -23,6 +23,7 @@ import com.dd7.yahn.rest.client.ClientFactory;
 import com.dd7.yahn.rest.client.HackerNewsApiClient;
 import com.dd7.yahn.rest.model.Item;
 import com.dd7.yahn.service.PreferenceService;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -32,7 +33,8 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
 
     private final String[] CATEGORIES = {"SavedStories", "Settings"};
-    private int MAX_STORIES_TO_DISPLAY = 50;
+    private int MAX_STORIES = 50;
+    private String PREFERRED_CAT;
 
     private Context mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -49,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
 
-        getMaxStoriesToDisplayFromPrefs();
+        getPreferences();
         prepareDrawerList();
         final StoryCardAdapter mStoryCardAdapter = prepareRecyclerViewAndGetCardAdapter();
         setUpSupportActionBar();
@@ -73,10 +75,12 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-    private void getMaxStoriesToDisplayFromPrefs() {
+    private void getPreferences() {
         PreferenceService preferenceService = new PreferenceService(mContext);
-        MAX_STORIES_TO_DISPLAY = preferenceService.getMaxStoriesSetting();
+        MAX_STORIES = preferenceService.getMaxStoriesSetting();
+        PREFERRED_CAT = preferenceService.getPreferredCategory();
     }
+
 
     private void prepareDrawerList() {
         ListView mDrawerList = (ListView) findViewById(R.id.drawerList);
@@ -115,9 +119,17 @@ public class MainActivity extends ActionBarActivity {
 
     private void loadTopStories(final StoryCardAdapter storyCardAdapter, HackerNewsApiClient service) {
         storyCardAdapter.clear();
-        service.getTopStories()
-                .flatMapIterable(ids -> ids)
-                .take(MAX_STORIES_TO_DISPLAY)
+        Observable<List<Integer>> stories = service.getTopStories();
+
+        String[] categories = getResources().getStringArray(R.array.categories);
+        if (PREFERRED_CAT.equals(categories[1])) {
+            stories = service.getBestStories();
+        } else if (PREFERRED_CAT.equals(categories[2])) {
+            stories = service.getNewStories();
+        }
+
+        stories.flatMapIterable(ids -> ids)
+                .take(MAX_STORIES)
                 .concatMapEager(id -> service.getItem(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -172,17 +184,12 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
-        // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
