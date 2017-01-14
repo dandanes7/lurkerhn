@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.dd7.yahn.adapter.CommentCardAdapter;
 import com.dd7.yahn.rest.client.ClientFactory;
 import com.dd7.yahn.rest.client.HackerNewsApiClient;
+import com.dd7.yahn.rest.model.Comment;
 import com.dd7.yahn.rest.model.Item;
 import com.dd7.yahn.service.SavedStoriesDatabaseService;
 import rx.Observable;
@@ -47,9 +48,10 @@ public class StoryDetail extends AppCompatActivity {
 
 
         Observable.from(mStory.getKids()).concatMapEager(id -> mService.getItem(id))
+                .map(item -> new Comment(item))
                 .concatMapEager(firstRowKid -> getComments(firstRowKid))
-                .filter(item -> {
-                    if (item != null && item.getText() != null) {
+                .filter(comment -> {
+                    if (comment != null && comment.getText() != null) {
                         return true;
                     } else {
                         return false;
@@ -57,7 +59,7 @@ public class StoryDetail extends AppCompatActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Item>() {
+                .subscribe(new Subscriber<Comment>() {
                     @Override
                     public void onCompleted() {
 
@@ -69,8 +71,8 @@ public class StoryDetail extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(Item item) {
-                        mCommentCardAdapter.addData(item);
+                    public void onNext(Comment comment) {
+                        mCommentCardAdapter.addData(comment);
                     }
                 });
     }
@@ -95,15 +97,17 @@ public class StoryDetail extends AppCompatActivity {
         return mCommentCardAdapter;
     }
 
-    public Observable<Item> getComments(Item item) {
-        if (item.getKids() == null || item.getKids().isEmpty()) {
-            return Observable.just(item);
+    public Observable<Comment> getComments(Comment comment) {
+        if (comment.getKids() == null || comment.getKids().isEmpty()) {
+            return Observable.just(comment);
         } else {
             return Observable.concatEager(
-                    Observable.just(item),
-                    Observable.from(item.getKids())
+                    Observable.just(comment),
+                    Observable.from(comment.getKids())
                             .concatMapEager(id -> mService.getItem(id))
-                            .concatMapEager(it -> getComments(it))
+                            .map(Comment::new)
+                            .doOnNext(com -> com.increasePadding(comment.getPadding()))
+                            .concatMapEager(this::getComments)
             );
         }
     }

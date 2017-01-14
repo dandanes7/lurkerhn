@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.dd7.yahn.R;
-import com.dd7.yahn.rest.model.Item;
+import com.dd7.yahn.rest.model.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,20 +16,20 @@ import java.util.List;
 public class CommentCardAdapter extends RecyclerView.Adapter<CommentCardAdapter.CommentViewHolder> {
 
     private Context mContext;
-    private List<Item> mItems;
+    private List<Comment> mComments;
 
     public CommentCardAdapter(Context mContext) {
         this.mContext = mContext;
-        mItems = new ArrayList<>();
+        mComments = new ArrayList<>();
     }
 
-    public void addData(Item item) {
-        mItems.add(item);
+    public void addData(Comment comment) {
+        mComments.add(comment);
         notifyDataSetChanged();
     }
 
     public void clear() {
-        mItems.clear();
+        mComments.clear();
         notifyDataSetChanged();
     }
 
@@ -43,17 +43,18 @@ public class CommentCardAdapter extends RecyclerView.Adapter<CommentCardAdapter.
 
     @Override
     public void onBindViewHolder(CommentViewHolder commentViewHolder, int i) {
-        Item item = mItems.get(i);
-        if (item.getText() != null) {
-            commentViewHolder.mCommentAuthor.setText(item.getBy());
-            commentViewHolder.mCommentText.setText(Html.fromHtml(item.getText()));
-            commentViewHolder.mCommentTime.setText(item.getTimeFormatted());
+        Comment comment = mComments.get(i);
+        if (comment.getText() != null) {
+            commentViewHolder.mCommentAuthor.setText(comment.getBy());
+            commentViewHolder.mCommentText.setText(Html.fromHtml(comment.getText()).toString().trim()); //trim() to remove annoying whitespace
+            commentViewHolder.mCommentTime.setText(comment.getTimeFormatted());
+            commentViewHolder.setPadding(comment.getPadding());
         }
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mComments.size();
     }
 
     class CommentViewHolder extends RecyclerView.ViewHolder {
@@ -67,6 +68,12 @@ public class CommentCardAdapter extends RecyclerView.Adapter<CommentCardAdapter.
             mCommentAuthor = (TextView) itemView.findViewById(R.id.comment_author);
             mCommentText = (TextView) itemView.findViewById(R.id.comment_text);
             mCommentTime = (TextView) itemView.findViewById(R.id.comment_time);
+        }
+
+        public void setPadding(int padding) {
+            final float scale = mContext.getResources().getDimensionPixelSize(R.dimen.text_margin);
+            int padding_in_px = (int) (padding * scale + 0.5f);
+            itemView.setPadding(padding_in_px, 0, 0, 0);
         }
     }
 }

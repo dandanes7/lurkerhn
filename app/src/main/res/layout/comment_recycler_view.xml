@@ -14,38 +14,50 @@
             card_view:cardCornerRadius="5dp"
             card_view:theme="@android:style/Animation"
             android:padding="15dp">
-        <LinearLayout android:orientation="vertical"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:padding="3dp">
-            <LinearLayout android:orientation="horizontal"
+        <LinearLayout android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:background="@color/storyDetail"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"/>
+
+            <LinearLayout android:orientation="vertical"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:padding="3dp">
+                <LinearLayout android:orientation="horizontal"
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent">
+                    <TextView
+                            android:id="@+id/comment_author"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/story_detail_text_size"
+                            android:textColor="@color/storyDetail"/>
+                    <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:background="@color/textCol"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"/>
+                    <TextView
+                            android:id="@+id/comment_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/story_detail_text_size"
+                            android:textColor="@color/storyDetail"/>
+                </LinearLayout>
+                <TextView android:id="@+id/comment_text"
+                          android:textColorLink="@color/colorAccent"
                           android:layout_width="match_parent"
-                          android:layout_height="match_parent">
-                <TextView
-                        android:id="@+id/comment_author"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/story_detail_text_size"
-                        android:textColor="@color/storyDetail"/>
-                <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:background="@color/textCol"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"/>
-                <TextView
-                        android:id="@+id/comment_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/story_detail_text_size"
-                        android:textColor="@color/storyDetail"/>
+                          android:layout_height="wrap_content"
+                          android:textSize="@dimen/story_title"/>
             </LinearLayout>
-            <TextView android:id="@+id/comment_text"
-                      android:textColorLink="@color/colorAccent"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:textSize="@dimen/story_title"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

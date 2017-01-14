@@ -24,8 +24,23 @@ public class Item implements Serializable{
     private int score;
     private String title;
 
-    public Item(int id) {
+    public Item() {
+    }
+
+    public Item(int id, boolean deleted, String type, String by, long time, String timeFormatted, String text, boolean dead, int parent, List<Integer> kids, String url, int score, String title) {
         this.id = id;
+        this.deleted = deleted;
+        this.type = type;
+        this.by = by;
+        this.time = time;
+        this.timeFormatted = timeFormatted;
+        this.text = text;
+        this.dead = dead;
+        this.parent = parent;
+        this.kids = kids;
+        this.url = url;
+        this.score = score;
+        this.title = title;
     }
 
     public int getId() {
