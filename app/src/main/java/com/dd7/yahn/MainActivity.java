@@ -32,7 +32,7 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    private final String[] CATEGORIES = {"SavedStories", "Settings"};
+    private final String[] CATEGORIES = {"Saved Stories", "Settings"};
     private int MAX_STORIES = 50;
     private String PREFERRED_CAT;
 
@@ -65,7 +65,6 @@ public class MainActivity extends ActionBarActivity {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             loadTopStories(storyCardAdapter, mService);
-            mSwipeRefreshLayout.setRefreshing(false);
         });
     }
 
@@ -118,6 +117,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void loadTopStories(final StoryCardAdapter storyCardAdapter, HackerNewsApiClient service) {
+        mSwipeRefreshLayout.setRefreshing(true);
         storyCardAdapter.clear();
         Observable<List<Integer>> stories = service.getTopStories();
 
@@ -136,7 +136,7 @@ public class MainActivity extends ActionBarActivity {
                 .subscribe(new Subscriber<Item>() {
                     @Override
                     public void onCompleted() {
-
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
@@ -201,7 +201,8 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String name = "com.dd7.yahn." + CATEGORIES[position] + "Activity";
+            //TODO: this is really ugly, should change this
+            String name = "com.dd7.yahn." + CATEGORIES[position].replace(" ", "") + "Activity";
             try {
                 Intent intent = new Intent(mContext, Class.forName(name));
                 startActivity(intent);

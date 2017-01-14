@@ -54,6 +54,7 @@ public class SavedStoriesActivity extends AppCompatActivity {
 
     private void loadSavedStories(final SavedStoriesCardAdapter savedStoriesCardAdapter, HackerNewsApiClient service) {
         savedStoriesCardAdapter.clear();
+        mSwipeRefreshLayout.setRefreshing(true);
         Observable.from(mDatabaseService.getItems().keySet())
                 .map(Integer::valueOf)
                 .concatMapEager(id -> service.getItem(id))
@@ -62,7 +63,7 @@ public class SavedStoriesActivity extends AppCompatActivity {
                 .subscribe(new Subscriber<Item>() {
                     @Override
                     public void onCompleted() {
-
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override

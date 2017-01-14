@@ -46,7 +46,6 @@ public class StoryDetail extends AppCompatActivity {
         final CommentCardAdapter mCommentCardAdapter = prepareRecyclerViewAndGetCardAdapter();
         mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
 
-
         Observable.from(mStory.getKids()).concatMapEager(id -> mService.getItem(id))
                 .map(item -> new Comment(item))
                 .concatMapEager(firstRowKid -> getComments(firstRowKid))

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class Item implements Serializable{
+public class Item implements Serializable {
 
     private int id;
     private boolean deleted;
