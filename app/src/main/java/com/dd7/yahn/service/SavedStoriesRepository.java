@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class SavedStoriesDatabaseService extends SQLiteOpenHelper {
+public class SavedStoriesRepository extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "SavedStories";
     private static final String DB_TABLE = "SavedStories";
@@ -23,7 +23,7 @@ public class SavedStoriesDatabaseService extends SQLiteOpenHelper {
     private static final String DB_CREATE = "CREATE TABLE SAVEDSTORIES (" + COL_ID + " integer primary key, " + COL_ADDED + " text not null);";
     private static final String SQL_SELECT = "SELECT * FROM " + DB_TABLE;
 
-    public SavedStoriesDatabaseService(Context context) {
+    public SavedStoriesRepository(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 

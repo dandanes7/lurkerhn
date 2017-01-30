@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:mContext="com.dd7.yahn.StoryDetail">
+        tools:mContext="com.dd7.yahn.StoryContentActivity">
 
     <android.support.design.widget.AppBarLayout
             android:layout_height="wrap_content"
@@ -23,6 +23,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_story_detail"/>
+    <include layout="@layout/partial_story_detail"/>
 
 </android.support.design.widget.CoordinatorLayout>

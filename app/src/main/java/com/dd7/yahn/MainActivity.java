@@ -83,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void prepareDrawerList() {
         ListView mDrawerList = (ListView) findViewById(R.id.drawerList);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, CATEGORIES));
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.item_drawer_list, CATEGORIES));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
@@ -155,7 +155,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onItemClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-            Intent intent = new Intent(mContext, StoryDetail.class);
+            Intent intent = new Intent(mContext, StoryContentActivity.class);
             intent.putExtra("item", item);
             startActivity(intent);
         }
@@ -163,7 +163,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onItemLongClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-            Intent intent = new Intent(mContext, StoryContentWebViewer.class);
+            Intent intent = new Intent(mContext, StoryWebViewActivity.class);
             intent.putExtra("item", item);
             startActivity(intent);
         }

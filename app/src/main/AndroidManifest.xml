@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".StoryDetail"
+                android:name=".StoryContentActivity"
                 android:label="@string/title_activity_story_detail"
                 android:parentActivityName=".MainActivity"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -27,7 +27,7 @@
                     android:value="com.dd7.yahn.MainActivity"/>
         </activity>
         <activity
-                android:name=".StoryContentWebViewer"
+                android:name=".StoryWebViewActivity"
                 android:label="@string/title_activity_story_content"
                 android:parentActivityName=".MainActivity"
                 android:theme="@style/AppTheme.NoActionBar">

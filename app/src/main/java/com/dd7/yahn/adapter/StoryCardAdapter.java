@@ -35,7 +35,7 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.Stor
 
     @Override
     public StoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View rootView = LayoutInflater.from(mContext).inflate(R.layout.story_recycler_view, null, false);
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.view_stories, null, false);
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rootView.setLayoutParams(lp);
         return new StoryViewHolder(rootView);

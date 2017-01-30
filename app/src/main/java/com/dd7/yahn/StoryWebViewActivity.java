@@ -7,7 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.dd7.yahn.rest.model.Item;
 
-public class StoryContentWebViewer extends AppCompatActivity {
+public class StoryWebViewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

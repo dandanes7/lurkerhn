@@ -15,7 +15,7 @@ import com.dd7.yahn.adapter.SavedStoriesCardAdapter;
 import com.dd7.yahn.rest.client.ClientFactory;
 import com.dd7.yahn.rest.client.HackerNewsApiClient;
 import com.dd7.yahn.rest.model.Item;
-import com.dd7.yahn.service.SavedStoriesDatabaseService;
+import com.dd7.yahn.service.SavedStoriesRepository;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,7 +26,7 @@ import java.util.List;
 public class SavedStoriesActivity extends AppCompatActivity {
 
     private Context mContext;
-    private SavedStoriesDatabaseService mDatabaseService;
+    private SavedStoriesRepository mDatabaseService;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private HackerNewsApiClient mService;
 
@@ -36,7 +36,7 @@ public class SavedStoriesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_saved_stories);
 
         mContext = getApplicationContext();
-        mDatabaseService = new SavedStoriesDatabaseService(mContext);
+        mDatabaseService = new SavedStoriesRepository(mContext);
         mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
 
         final SavedStoriesCardAdapter savedStoriesCardAdapter = prepareSavedStoriesCardAdapter();
@@ -92,7 +92,7 @@ public class SavedStoriesActivity extends AppCompatActivity {
         @Override
         public void onItemClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-            Intent intent = new Intent(mContext, StoryDetail.class);
+            Intent intent = new Intent(mContext, StoryContentActivity.class);
             intent.putExtra("item", item);
             startActivity(intent);
         }

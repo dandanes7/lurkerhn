@@ -20,13 +20,13 @@ import com.dd7.yahn.rest.client.ClientFactory;
 import com.dd7.yahn.rest.client.HackerNewsApiClient;
 import com.dd7.yahn.rest.model.Comment;
 import com.dd7.yahn.rest.model.Item;
-import com.dd7.yahn.service.SavedStoriesDatabaseService;
+import com.dd7.yahn.service.SavedStoriesRepository;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class StoryDetail extends AppCompatActivity {
+public class StoryContentActivity extends AppCompatActivity {
 
     private static final String ASK_HN_TAG = "Ask HN:";
     private static final String TELL_HN_TAG = "Tell HN:";
@@ -34,7 +34,7 @@ public class StoryDetail extends AppCompatActivity {
     private Context mContext;
     private Item mStory;
     private HackerNewsApiClient mService;
-    private SavedStoriesDatabaseService mDatabaseService;
+    private SavedStoriesRepository mDatabaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,7 @@ public class StoryDetail extends AppCompatActivity {
 
     private void setUpButtonsAndAddContentToTextViews(final Item item) {
         ImageButton saveButton = (ImageButton) findViewById(R.id.save_story);
-        mDatabaseService = new SavedStoriesDatabaseService(mContext);
+        mDatabaseService = new SavedStoriesRepository(mContext);
         if (mDatabaseService.exists(String.valueOf(item.getId()))) {
             saveButton.setColorFilter(Color.argb(255, 255, 255, 255));
             saveButton.setEnabled(false);
@@ -122,7 +122,7 @@ public class StoryDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    SavedStoriesDatabaseService databaseService = new SavedStoriesDatabaseService(mContext);
+                    SavedStoriesRepository databaseService = new SavedStoriesRepository(mContext);
                     databaseService.save(item);
                     Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
@@ -148,7 +148,7 @@ public class StoryDetail extends AppCompatActivity {
 
         ImageButton viewButton = (ImageButton) findViewById(R.id.view_story);
         viewButton.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, StoryContentWebViewer.class);
+            Intent intent = new Intent(mContext, StoryWebViewActivity.class);
             intent.putExtra("item", item);
             startActivity(intent);
         });

@@ -35,7 +35,7 @@ public class SavedStoriesCardAdapter extends RecyclerView.Adapter<SavedStoriesCa
 
     @Override
     public SavedStoriesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View rootView = LayoutInflater.from(mContext).inflate(R.layout.saved_stories_recycler_view, null, false);
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.view_saved_stories, null, false);
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rootView.setLayoutParams(lp);
         return new SavedStoriesViewHolder(rootView);
