@@ -35,6 +35,7 @@ public class StoryContentActivity extends AppCompatActivity {
     private Item mStory;
     private HackerNewsApiClient mService;
     private SavedStoriesRepository mDatabaseService;
+    private boolean mStoryIsSaved;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +117,8 @@ public class StoryContentActivity extends AppCompatActivity {
     private void setUpButtonsAndAddContentToTextViews(final Item item) {
         ImageButton saveButton = (ImageButton) findViewById(R.id.save_story);
         mDatabaseService = new SavedStoriesRepository(mContext);
-        if (mDatabaseService.exists(String.valueOf(item.getId()))) {
+        mStoryIsSaved = mDatabaseService.exists(String.valueOf(item.getId()));
+        if (mStoryIsSaved) {
             saveButton.setColorFilter(Color.argb(255, 255, 255, 255));
             saveButton.setEnabled(false);
         }
@@ -124,9 +126,17 @@ public class StoryContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    SavedStoriesRepository databaseService = new SavedStoriesRepository(mContext);
-                    databaseService.save(item);
-                    Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
+                    if (mStoryIsSaved) {
+                        mDatabaseService.delete(String.valueOf(item.getId()));
+                        saveButton.setColorFilter(Color.argb(0,0,0,0));
+                        mStoryIsSaved = false;
+                    } else {
+//                        SavedStoriesRepository databaseService = new SavedStoriesRepository(mContext);
+                        mDatabaseService.save(item);
+//                        Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
+                        saveButton.setColorFilter(Color.argb(255, 255, 255, 255));
+                        mStoryIsSaved = true;
+                    }
                 } catch (Exception e) {
                     Toast.makeText(mContext, "Could not save story", Toast.LENGTH_SHORT).show();
                 }
