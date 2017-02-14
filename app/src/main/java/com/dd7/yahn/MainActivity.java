@@ -76,8 +76,8 @@ public class MainActivity extends ActionBarActivity {
 
     private void getPreferences() {
         PreferenceService preferenceService = new PreferenceService(mContext);
-        MAX_STORIES = preferenceService.getMaxStoriesSetting();
-        PREFERRED_CAT = preferenceService.getPreferredCategory();
+        MAX_STORIES = preferenceService.getMaxStoriesPref();
+        PREFERRED_CAT = preferenceService.getCategoryPref();
     }
 
 
@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void loadTopStories(final StoryCardAdapter storyCardAdapter, HackerNewsApiClient service) {
-        mSwipeRefreshLayout.setRefreshing(true);
+//        mSwipeRefreshLayout.setRefreshing(true);
         storyCardAdapter.clear();
         Observable<List<Integer>> stories = service.getTopStories();
 
@@ -136,12 +136,13 @@ public class MainActivity extends ActionBarActivity {
                 .subscribe(new Subscriber<Item>() {
                     @Override
                     public void onCompleted() {
-                        mSwipeRefreshLayout.setRefreshing(false);
+//                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e("NETWORKERROR", "Something went wrong" + e.getMessage(), e);
+                        Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_LONG).show();
                     }
 
                     @Override

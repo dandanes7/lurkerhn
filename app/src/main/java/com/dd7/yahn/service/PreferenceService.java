@@ -20,23 +20,23 @@ public class PreferenceService {
         sSharedPreferences = mContext.getSharedPreferences(FILE_PREFS, Context.MODE_PRIVATE);
     }
 
-    public void saveMaxStoriesSetting(int value) {
+    public void saveMaxStoriesPref(int value) {
         SharedPreferences.Editor editor = sSharedPreferences.edit();
         editor.putInt(MAX_STORIES, value);
         editor.commit();
     }
 
-    public void savePreferredCateogory(String value) {
+    public void saveCategoryPref(String value) {
         SharedPreferences.Editor editor = sSharedPreferences.edit();
         editor.putString(PREFERRED_CAT, value);
         editor.commit();
     }
 
-    public int getMaxStoriesSetting() {
+    public int getMaxStoriesPref() {
         return sSharedPreferences.getInt(MAX_STORIES, MAX_STORIES_DEFAULT);
     }
 
-    public String getPreferredCategory() {
+    public String getCategoryPref() {
         return sSharedPreferences.getString(PREFERRED_CAT, PREFERRED_CAT_DEFAULT);
     }
 }

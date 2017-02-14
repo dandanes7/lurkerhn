@@ -46,34 +46,36 @@ public class StoryContentActivity extends AppCompatActivity {
         final CommentCardAdapter mCommentCardAdapter = prepareRecyclerViewAndGetCardAdapter();
         mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
 
-        Observable.from(mStory.getKids()).concatMapEager(id -> mService.getItem(id))
-                .map(item -> new Comment(item))
-                .concatMapEager(firstRowKid -> getComments(firstRowKid))
-                .filter(comment -> {
-                    if (comment != null && comment.getText() != null) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Comment>() {
-                    @Override
-                    public void onCompleted() {
+        if (mStory.getKids() != null) {
+            Observable.from(mStory.getKids()).concatMapEager(id -> mService.getItem(id))
+                    .map(item -> new Comment(item))
+                    .concatMapEager(firstRowKid -> getComments(firstRowKid))
+                    .filter(comment -> {
+                        if (comment != null && comment.getText() != null) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Comment>() {
+                        @Override
+                        public void onCompleted() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("NETWORKERROR", "Something went wrong" + e.getMessage(), e);
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e("NETWORKERROR", "Something went wrong" + e.getMessage(), e);
+                        }
 
-                    @Override
-                    public void onNext(Comment comment) {
-                        mCommentCardAdapter.addData(comment);
-                    }
-                });
+                        @Override
+                        public void onNext(Comment comment) {
+                            mCommentCardAdapter.addData(comment);
+                        }
+                    });
+        }
     }
 
     private void setUpToolbarAndGetStoryFromIntent() {

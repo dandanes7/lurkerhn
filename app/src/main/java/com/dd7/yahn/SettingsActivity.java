@@ -1,67 +1,114 @@
 package com.dd7.yahn;
 
+
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.*;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
 import com.dd7.yahn.service.PreferenceService;
 
-public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class SettingsActivity extends AppCompatPreferenceActivity {
 
-    private Context mContext;
     private PreferenceService mPreferenceService;
-    private EditText mEditTextMaxStories;
-    private Spinner mSpinner;
-    private String mSelectedPreferredCat;
+    /**
+     * A preference value change listener that updates the preference's summary
+     * to reflect its new value.
+     */
+    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object value) {
+            String stringValue = value.toString();
+
+            if (preference instanceof ListPreference) {
+                // For list preferences, look up the correct display value in
+                // the preference's 'entries' list.
+                ListPreference listPreference = (ListPreference) preference;
+                int index = listPreference.findIndexOfValue(stringValue);
+
+                // Set the summary to reflect the new value.
+                preference.setSummary(
+                        index >= 0
+                                ? listPreference.getEntries()[index]
+                                : null);
+            } else {
+                // For all other preferences, set the summary to the value's
+                // simple string representation.
+                preference.setSummary(stringValue);
+            }
+            return true;
+        }
+    };
+
+    /**
+     * Helper method to determine if the device has an extra-large screen. For
+     * example, 10" tablets are extra-large.
+     */
+    private static boolean isXLargeTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        mContext = getApplicationContext();
-        mPreferenceService = new PreferenceService(mContext);
+        setupActionBar();
+        mPreferenceService = new PreferenceService(getApplicationContext());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-
-        ImageButton fab = (ImageButton) findViewById(R.id.save_settings);
-        fab.setOnClickListener(view -> savePreferences());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mSpinner = (Spinner) findViewById(R.id.pref_cat);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.categories, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(adapter);
-        mSpinner.setOnItemSelectedListener(this);
-
-        mEditTextMaxStories = (EditText) findViewById(R.id.max_story_no);
-        mEditTextMaxStories.setText(String.valueOf(mPreferenceService.getMaxStoriesSetting()));
-
-        mSpinner.setSelection(adapter.getPosition(mPreferenceService.getPreferredCategory()));
+        addPreferencesFromResource(R.xml.pref_general);
+        Preference prefCatsPref = (Preference) findPreference("pref_cats");
+        prefCatsPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                String val = ((ListPreference) preference).getValue();
+                String val = (String) newValue;
+                mPreferenceService.saveCategoryPref(val);
+                return true;
+            }
+        });
+        Preference maxStoriesPref = (Preference) findPreference("pref_max_stories");
+        maxStoriesPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                String val = ((ListPreference) preference).getValue();
+                String val = (String) newValue;
+                mPreferenceService.saveMaxStoriesPref(Integer.parseInt(val));
+                return true;
+            }
+        });
     }
 
-    private void savePreferences() {
-        int maxStories = Integer.parseInt(mEditTextMaxStories.getText().toString());
-
-        mPreferenceService.saveMaxStoriesSetting(maxStories);
-        if (mSelectedPreferredCat != null) {
-            mPreferenceService.savePreferredCateogory(mSelectedPreferredCat);
+    /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mSelectedPreferredCat = parent.getItemAtPosition(position).toString();
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            if (!super.onMenuItemSelected(featureId, item)) {
+                NavUtils.navigateUpFromSameTask(this);
+            }
+            return true;
+        }
+        return super.onMenuItemSelected(featureId, item);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
+    public boolean onIsMultiPane() {
+        return isXLargeTablet(this);
     }
 }
