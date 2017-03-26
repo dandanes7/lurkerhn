@@ -5,7 +5,7 @@ After using multiple Android apps to read Hacker News, I decided that I should b
 ### Features
 
 At the moment, I'm using this app on a daily basis to read HN. So far, it fits all my needs, which are:
-- read the main three categories (top, new, best, show)
+- read the main three categories (top, new, best, show, ask)
 - save stories to read them later
 - easily share stories
 - open a link in a webview (for quick reading) or default web browser

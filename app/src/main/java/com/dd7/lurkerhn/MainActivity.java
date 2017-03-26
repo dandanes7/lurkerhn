@@ -138,6 +138,7 @@ public class MainActivity extends ActionBarActivity {
         } else {
             stories = service.getTopStories();
         }
+        stories = service.getAskStories();
 
         stories.flatMapIterable(ids -> ids)
                 .take(MAX_STORIES)
@@ -147,7 +148,6 @@ public class MainActivity extends ActionBarActivity {
                 .subscribe(new Subscriber<Item>() {
                     @Override
                     public void onCompleted() {
-//                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override

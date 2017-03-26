@@ -174,15 +174,37 @@ public class StoryContentActivity extends AppCompatActivity {
         storyBy.setText(item.getBy());
         TextView storyUrl = (TextView) findViewById(R.id.story_url);
         storyUrl.setText(item.getUrl());
+
+        //Gotta treat ASK HN as a special case, because url does not exist and sometimes there's text
         if (item.getTitle().startsWith(ASK_HN_TAG) || item.getTitle().startsWith(TELL_HN_TAG)) {
             viewButton.setEnabled(false);
             openInBrowserButton.setEnabled(false);
             viewButton.setAlpha(.5f);
             openInBrowserButton.setAlpha(.5f);
+
             storyUrl.setText("-");
-            //This adds Ask HN: description
+            setUpAskHnStoryText(item);
+        }
+    }
+
+    private void setUpAskHnStoryText(final Item item) {
+        if (item.getText() != null) {
             TextView storyText = (TextView) findViewById(R.id.story_text);
             storyText.setText(Html.fromHtml(item.getText()));
+            storyText.setOnClickListener(new View.OnClickListener() {
+                private boolean minimized;
+
+                @Override
+                public void onClick(View v) {
+                    if (!minimized) {
+                        storyText.setText("<<Click to expand>>");
+                        minimized = true;
+                    } else {
+                        storyText.setText(Html.fromHtml(item.getText()));
+                        minimized = false;
+                    }
+                }
+            });
         }
     }
 }
