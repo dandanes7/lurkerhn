@@ -63,7 +63,6 @@ public class StoryContentActivity extends AppCompatActivity {
                     .subscribe(new Subscriber<Comment>() {
                         @Override
                         public void onCompleted() {
-
                         }
 
                         @Override

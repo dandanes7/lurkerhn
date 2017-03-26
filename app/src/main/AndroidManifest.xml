@@ -57,5 +57,4 @@
                     android:value="com.dd7.lurkerhn.MainActivity"/>
         </activity>
     </application>
-
 </manifest>
