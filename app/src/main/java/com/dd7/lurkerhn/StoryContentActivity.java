@@ -1,4 +1,4 @@
-package com.dd7.yahn;
+package com.dd7.lurkerhn;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +15,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.dd7.yahn.adapter.CommentCardAdapter;
-import com.dd7.yahn.rest.client.ClientFactory;
-import com.dd7.yahn.rest.client.HackerNewsApiClient;
-import com.dd7.yahn.rest.model.Comment;
-import com.dd7.yahn.rest.model.Item;
-import com.dd7.yahn.service.SavedStoriesRepository;
+import com.dd7.lurkerhn.adapter.CommentCardAdapter;
+import com.dd7.lurkerhn.rest.client.RestClientFactory;
+import com.dd7.lurkerhn.rest.client.HackerNewsApiClient;
+import com.dd7.lurkerhn.rest.model.Comment;
+import com.dd7.lurkerhn.rest.model.Item;
+import com.dd7.lurkerhn.service.SavedStoriesRepository;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,7 +45,7 @@ public class StoryContentActivity extends AppCompatActivity {
         setUpToolbarAndGetStoryFromIntent();
 
         final CommentCardAdapter mCommentCardAdapter = prepareRecyclerViewAndGetCardAdapter();
-        mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
+        mService = RestClientFactory.createHackerNewsService();
 
         if (mStory.getKids() != null) {
             Observable.from(mStory.getKids()).concatMapEager(id -> mService.getItem(id))
@@ -68,7 +68,7 @@ public class StoryContentActivity extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.e("NETWORKERROR", "Something went wrong" + e.getMessage(), e);
+                            Log.e("ERROR", "Something went wrong" + e.getMessage(), e);
                         }
 
                         @Override
@@ -120,7 +120,6 @@ public class StoryContentActivity extends AppCompatActivity {
         mStoryIsSaved = mDatabaseService.exists(String.valueOf(item.getId()));
         if (mStoryIsSaved) {
             saveButton.setColorFilter(Color.argb(255, 255, 255, 255));
-            saveButton.setEnabled(false);
         }
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,12 +127,10 @@ public class StoryContentActivity extends AppCompatActivity {
                 try {
                     if (mStoryIsSaved) {
                         mDatabaseService.delete(String.valueOf(item.getId()));
-                        saveButton.setColorFilter(Color.argb(0,0,0,0));
+                        saveButton.setColorFilter(Color.argb(0, 0, 0, 0));
                         mStoryIsSaved = false;
                     } else {
-//                        SavedStoriesRepository databaseService = new SavedStoriesRepository(mContext);
                         mDatabaseService.save(item);
-//                        Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
                         saveButton.setColorFilter(Color.argb(255, 255, 255, 255));
                         mStoryIsSaved = true;
                     }

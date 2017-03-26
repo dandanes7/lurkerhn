@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.3"
 
     defaultConfig {
-        applicationId "com.dd7.yahn"
+        applicationId "com.dd7.lurkerhn"
         minSdkVersion 19
         targetSdkVersion 24
         versionCode 1
@@ -30,13 +30,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.squareup.retrofit:retrofit:$rootProject.ext.retrofitVersion"
-
-//    compile 'com.android.support:appcompat-v7:24.2.1'
-//    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-//    compile 'com.google.code.gson:gson:2.6.2'
-//    compile 'com.android.support:support-v4:24.2.1'
-//    compile 'com.android.support:recyclerview-v7:24.2.1'
-
 
     testCompile 'junit:junit:4.12'
     compile 'io.reactivex:rxjava:1.0.+'

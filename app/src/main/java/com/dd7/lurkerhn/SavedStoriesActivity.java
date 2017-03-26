@@ -1,4 +1,4 @@
-package com.dd7.yahn;
+package com.dd7.lurkerhn;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,13 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-import com.dd7.yahn.adapter.ClickListener;
-import com.dd7.yahn.adapter.SavedStoriesCardAdapter;
-import com.dd7.yahn.rest.client.ClientFactory;
-import com.dd7.yahn.rest.client.HackerNewsApiClient;
-import com.dd7.yahn.rest.model.Item;
-import com.dd7.yahn.service.SavedStoriesRepository;
+import com.dd7.lurkerhn.adapter.ClickListener;
+import com.dd7.lurkerhn.adapter.SavedStoriesCardAdapter;
+import com.dd7.lurkerhn.rest.client.RestClientFactory;
+import com.dd7.lurkerhn.rest.client.HackerNewsApiClient;
+import com.dd7.lurkerhn.rest.model.Item;
+import com.dd7.lurkerhn.service.SavedStoriesRepository;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -37,7 +36,7 @@ public class SavedStoriesActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
         mDatabaseService = new SavedStoriesRepository(mContext);
-        mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
+        mService = RestClientFactory.createHackerNewsService();
 
         final SavedStoriesCardAdapter savedStoriesCardAdapter = prepareSavedStoriesCardAdapter();
         prepareSwipeRefreshLayout(savedStoriesCardAdapter);
@@ -100,9 +99,9 @@ public class SavedStoriesActivity extends AppCompatActivity {
         @Override
         public void onItemLongClick(int position, View v, List<Item> items) {
             Item item = items.get(position);
-            mDatabaseService.delete(String.valueOf(item.getId()));
-            Toast.makeText(mContext, "Deleted item " + String.valueOf(item.getId()), Toast.LENGTH_LONG).show();
-            recreate();
+            Intent intent = new Intent(mContext, StoryWebViewActivity.class);
+            intent.putExtra("item", item);
+            startActivity(intent);
         }
     }
 }

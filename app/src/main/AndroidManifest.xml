@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.dd7.yahn">
+          package="com.dd7.lurkerhn">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -10,7 +10,8 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.dd7.lurkerhn.MainActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -18,38 +19,42 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".StoryContentActivity"
+                android:name="com.dd7.lurkerhn.StoryContentActivity"
                 android:label="@string/title_activity_story_detail"
-                android:parentActivityName=".MainActivity"
+                android:parentActivityName="com.dd7.lurkerhn.MainActivity"
+                android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.dd7.yahn.MainActivity"/>
+                    android:value="com.dd7.lurkerhn.MainActivity"/>
         </activity>
         <activity
-                android:name=".StoryWebViewActivity"
+                android:name="com.dd7.lurkerhn.StoryWebViewActivity"
                 android:label="@string/title_activity_story_content"
-                android:parentActivityName=".MainActivity"
+                android:parentActivityName="com.dd7.lurkerhn.MainActivity"
+                android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.dd7.yahn.MainActivity"/>
+                    android:value="com.dd7.lurkerhn.MainActivity"/>
         </activity>
         <activity
-                android:name=".SavedStoriesActivity"
+                android:name="com.dd7.lurkerhn.SavedStoriesActivity"
                 android:label="@string/title_activity_saved_stories"
-                android:parentActivityName=".MainActivity">
+                android:parentActivityName="com.dd7.lurkerhn.MainActivity"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.dd7.yahn.MainActivity"/>
+                    android:value="com.dd7.lurkerhn.MainActivity"/>
         </activity>
         <activity
-                android:name=".SettingsActivity"
+                android:name="com.dd7.lurkerhn.SettingsActivity"
                 android:label="@string/title_activity_settings"
-                android:parentActivityName=".MainActivity">
+                android:parentActivityName="com.dd7.lurkerhn.MainActivity"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.dd7.yahn.MainActivity"/>
+                    android:value="com.dd7.lurkerhn.MainActivity"/>
         </activity>
     </application>
 

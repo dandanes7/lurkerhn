@@ -1,4 +1,4 @@
-package com.dd7.yahn.service;
+package com.dd7.lurkerhn.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;

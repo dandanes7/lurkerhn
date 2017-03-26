@@ -1,6 +1,6 @@
-package com.dd7.yahn.rest.client;
+package com.dd7.lurkerhn.rest.client;
 
-import com.dd7.yahn.rest.model.Item;
+import com.dd7.lurkerhn.rest.model.Item;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import rx.Observable;

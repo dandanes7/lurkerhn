@@ -1,11 +1,11 @@
-package com.dd7.yahn.service;
+package com.dd7.lurkerhn.service;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.dd7.yahn.rest.model.Item;
+import com.dd7.lurkerhn.rest.model.Item;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -15,9 +15,9 @@ import java.util.TimeZone;
 
 public class SavedStoriesRepository extends SQLiteOpenHelper {
 
+    private static final int DB_VERSION = 1;
     private static final String DB_NAME = "SavedStories";
     private static final String DB_TABLE = "SavedStories";
-    private static final int DB_VERSION = 1;
     private static final String COL_ID = "ID";
     private static final String COL_ADDED = "ADDED";
     private static final String DB_CREATE = "CREATE TABLE SAVEDSTORIES (" + COL_ID + " integer primary key, " + COL_ADDED + " text not null);";

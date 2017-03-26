@@ -1,4 +1,4 @@
-package com.dd7.yahn;
+package com.dd7.lurkerhn;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

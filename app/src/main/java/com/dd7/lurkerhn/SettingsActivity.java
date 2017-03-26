@@ -1,4 +1,4 @@
-package com.dd7.yahn;
+package com.dd7.lurkerhn;
 
 
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.preference.Preference;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
-import com.dd7.yahn.service.PreferenceService;
+import com.dd7.lurkerhn.service.PreferenceService;
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
@@ -57,7 +57,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
         setupActionBar();
         mPreferenceService = new PreferenceService(getApplicationContext());
-
+//TODO: http://stackoverflow.com/questions/10460715/how-to-customize-list-preference-radio-button/14790665#14790665
         addPreferencesFromResource(R.xml.pref_general);
         Preference prefCatsPref = (Preference) findPreference("pref_cats");
         prefCatsPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

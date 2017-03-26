@@ -1,4 +1,4 @@
-package com.dd7.yahn;
+package com.dd7.lurkerhn;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +17,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.dd7.yahn.adapter.ClickListener;
-import com.dd7.yahn.adapter.StoryCardAdapter;
-import com.dd7.yahn.rest.client.ClientFactory;
-import com.dd7.yahn.rest.client.HackerNewsApiClient;
-import com.dd7.yahn.rest.model.Item;
-import com.dd7.yahn.service.PreferenceService;
+import com.dd7.lurkerhn.adapter.ClickListener;
+import com.dd7.lurkerhn.adapter.StoryCardAdapter;
+import com.dd7.lurkerhn.rest.client.RestClientFactory;
+import com.dd7.lurkerhn.rest.client.HackerNewsApiClient;
+import com.dd7.lurkerhn.rest.model.Item;
+import com.dd7.lurkerhn.service.PreferenceService;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mService = ClientFactory.createRetrofitService(HackerNewsApiClient.class, HackerNewsApiClient.HNENDPOINT);
+        mService = RestClientFactory.createHackerNewsService();
 
         getPreferences();
         prepareDrawerList();
@@ -117,7 +117,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void loadTopStories(final StoryCardAdapter storyCardAdapter, HackerNewsApiClient service) {
-//        mSwipeRefreshLayout.setRefreshing(true);
         storyCardAdapter.clear();
         Observable<List<Integer>> stories = service.getTopStories();
 
@@ -203,7 +202,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             //TODO: this is really ugly, should change this
-            String name = "com.dd7.yahn." + CATEGORIES[position].replace(" ", "") + "Activity";
+            String name = "com.dd7.lurkerhn." + CATEGORIES[position].replace(" ", "") + "Activity";
             try {
                 Intent intent = new Intent(mContext, Class.forName(name));
                 startActivity(intent);

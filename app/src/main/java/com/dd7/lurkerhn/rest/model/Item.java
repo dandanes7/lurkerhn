@@ -1,4 +1,4 @@
-package com.dd7.yahn.rest.model;
+package com.dd7.lurkerhn.rest.model;
 
 import java.io.Serializable;
 import java.net.URI;

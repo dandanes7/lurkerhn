@@ -1,4 +1,4 @@
-package com.dd7.yahn.util;
+package com.dd7.lurkerhn.util;
 
 public class StringUtils {
 

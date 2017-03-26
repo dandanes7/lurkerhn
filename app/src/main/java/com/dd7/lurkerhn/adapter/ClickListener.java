@@ -1,7 +1,7 @@
-package com.dd7.yahn.adapter;
+package com.dd7.lurkerhn.adapter;
 
 import android.view.View;
-import com.dd7.yahn.rest.model.Item;
+import com.dd7.lurkerhn.rest.model.Item;
 
 import java.util.List;
 
