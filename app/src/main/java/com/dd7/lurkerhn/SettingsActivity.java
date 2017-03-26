@@ -57,13 +57,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
         setupActionBar();
         mPreferenceService = new PreferenceService(getApplicationContext());
-//TODO: http://stackoverflow.com/questions/10460715/how-to-customize-list-preference-radio-button/14790665#14790665
         addPreferencesFromResource(R.xml.pref_general);
         Preference prefCatsPref = (Preference) findPreference("pref_cats");
         prefCatsPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-//                String val = ((ListPreference) preference).getValue();
                 String val = (String) newValue;
                 mPreferenceService.saveCategoryPref(val);
                 return true;
@@ -73,7 +71,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         maxStoriesPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-//                String val = ((ListPreference) preference).getValue();
                 String val = (String) newValue;
                 mPreferenceService.saveMaxStoriesPref(Integer.parseInt(val));
                 return true;

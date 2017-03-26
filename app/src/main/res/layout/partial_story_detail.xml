@@ -74,10 +74,6 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorPrimary"
                         android:src="@drawable/ic_openstory"/>
-                <!--
-                    android:tint="@color/colorAccent"
-                                                    -->
-                <!--TODO: DECIDE HOW TO DO WITH SAVED ARTICLES: IF I MARK EM OR NOT-->
             </LinearLayout>
         </RelativeLayout>
         <RelativeLayout

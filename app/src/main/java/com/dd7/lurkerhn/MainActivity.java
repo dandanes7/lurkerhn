@@ -28,13 +28,16 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends ActionBarActivity {
 
-    private final String[] CATEGORIES = {"Saved Stories", "Settings"};
-    private int MAX_STORIES = 50;
-    private String PREFERRED_CAT;
+    private final String[] ACTIVITIES = {"Saved Stories", "Settings"};
+    private static Map<String, Class> ACTIVITY_CLASSES;
+    private static int MAX_STORIES = 50;
+    private static String PREFERRED_CAT;
 
     private Context mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -45,6 +48,9 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ACTIVITY_CLASSES = new HashMap<>();
+        ACTIVITY_CLASSES.put(ACTIVITIES[0], SavedStoriesActivity.class);
+        ACTIVITY_CLASSES.put(ACTIVITIES[1], SettingsActivity.class);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
@@ -83,7 +89,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void prepareDrawerList() {
         ListView mDrawerList = (ListView) findViewById(R.id.drawerList);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.item_drawer_list, CATEGORIES));
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.item_drawer_list, ACTIVITIES));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
@@ -201,13 +207,11 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //TODO: this is really ugly, should change this
-            String name = "com.dd7.lurkerhn." + CATEGORIES[position].replace(" ", "") + "Activity";
             try {
-                Intent intent = new Intent(mContext, Class.forName(name));
+                Intent intent = new Intent(mContext, Class.forName(ACTIVITY_CLASSES.get(ACTIVITIES[position]).getName()));
                 startActivity(intent);
             } catch (ClassNotFoundException e) {
-                Toast.makeText(mContext, "Could not find activity " + name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Could not find activity " + ACTIVITIES[position], Toast.LENGTH_SHORT).show();
             }
         }
     }
