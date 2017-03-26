@@ -5,11 +5,11 @@ import android.content.SharedPreferences;
 
 public class PreferenceService {
 
-    private static final String FILE_PREFS = "file_prefs";
+    private static final String FILE_PREFS = "lurker_hn_prefs";
     private static final String MAX_STORIES = "MAX_STORIES";
     private static final String PREFERRED_CAT = "PREFERRED_CAT";
 
-    private static final String PREFERRED_CAT_DEFAULT = "TOP";
+    private static final String PREFERRED_CAT_DEFAULT = "Top";
     private static final int MAX_STORIES_DEFAULT = 50;
 
     private static SharedPreferences sSharedPreferences;

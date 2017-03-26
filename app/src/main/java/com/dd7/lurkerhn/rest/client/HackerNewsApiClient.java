@@ -20,6 +20,10 @@ public interface HackerNewsApiClient {
     @GET("/newstories.json")
     Observable<List<Integer>> getNewStories();
 
+    @GET("/showstories.json")
+    Observable<List<Integer>> getShowStories();
+
+
     @GET("/item/{id}.json")
     Observable<Item> getItem(@Path("id") int id);
 }

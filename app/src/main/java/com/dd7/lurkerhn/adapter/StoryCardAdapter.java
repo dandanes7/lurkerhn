@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.dd7.lurkerhn.R;
 import com.dd7.lurkerhn.rest.model.Item;
+import com.dd7.lurkerhn.rest.model.StoryCard;
+import com.dd7.lurkerhn.service.StoryCardCreator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +19,11 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.Stor
     private Context mContext;
     private List<Item> mItems;
     private static ClickListener sClickListener;
+    private StoryCardCreator mStoryCardCreator;
 
     public StoryCardAdapter(Context mContext) {
         this.mContext = mContext;
+        mStoryCardCreator = new StoryCardCreator(mContext);
         mItems = new ArrayList<>();
     }
 
@@ -44,29 +48,7 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.Stor
     @Override
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
         Item item = mItems.get(i);
-        int score = item.getScore();
-        String title = item.getTitle();
-        storyViewHolder.mStoryTitle.setText(title);
-        storyViewHolder.mStoryScore.setText(Integer.toString(score));
-        storyViewHolder.mStoryBy.setText(item.getBy());
-        storyViewHolder.mStoryTime.setText(item.getTimeFormatted());
-        storyViewHolder.mStoryUrl.setText(item.getUrlDomainName());
-
-        setScoreColor(storyViewHolder, score);
-    }
-
-    private void setScoreColor(StoryViewHolder storyViewHolder, int score) {
-        if (score < 50) {
-            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under50));
-        } else if (score < 100) {
-            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under100));
-        } else if (score < 150) {
-            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under150));
-        } else if (score < 250) {
-            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.under250));
-        } else {
-            storyViewHolder.mStoryScore.setTextColor(mContext.getResources().getColor(R.color.over250));
-        }
+        mStoryCardCreator.build(item, storyViewHolder.storyCard);
     }
 
     @Override
@@ -79,19 +61,16 @@ public class StoryCardAdapter extends RecyclerView.Adapter<StoryCardAdapter.Stor
     }
 
     class StoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        private TextView mStoryScore;
-        private TextView mStoryBy;
-        private TextView mStoryUrl;
-        private TextView mStoryTitle;
-        private TextView mStoryTime;
+        StoryCard storyCard;
 
         StoryViewHolder(View itemView) {
             super(itemView);
-            mStoryScore = (TextView) itemView.findViewById(R.id.story_score);
-            mStoryBy = (TextView) itemView.findViewById(R.id.story_by);
-            mStoryUrl = (TextView) itemView.findViewById(R.id.story_url);
-            mStoryTitle = (TextView) itemView.findViewById(R.id.story_title);
-            mStoryTime = (TextView) itemView.findViewById(R.id.story_time);
+            storyCard = new StoryCard();
+            storyCard.setmStoryScore((TextView) itemView.findViewById(R.id.story_score));
+            storyCard.setmStoryBy((TextView) itemView.findViewById(R.id.story_by));
+            storyCard.setmStoryUrl((TextView) itemView.findViewById(R.id.story_url));
+            storyCard.setmStoryTitle((TextView) itemView.findViewById(R.id.story_title));
+            storyCard.setmStoryTime((TextView) itemView.findViewById(R.id.story_time));
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }

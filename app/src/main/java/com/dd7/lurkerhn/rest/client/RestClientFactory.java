@@ -12,8 +12,7 @@ public class RestClientFactory {
         final RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(endPoint)
                 .build();
-        T service = restAdapter.create(clazz);
 
-        return service;
+        return restAdapter.create(clazz);
     }
 }

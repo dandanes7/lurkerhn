@@ -37,8 +37,8 @@ public class MainActivity extends ActionBarActivity {
     private final String[] ACTIVITIES = {"Saved Stories", "Settings"};
     private static Map<String, Class> ACTIVITY_CLASSES;
     private static int MAX_STORIES = 50;
-    private static String PREFERRED_CAT;
 
+    private String mPreferredCat;
     private Context mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private DrawerLayout mDrawerLayout;
@@ -83,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
     private void getPreferences() {
         PreferenceService preferenceService = new PreferenceService(mContext);
         MAX_STORIES = preferenceService.getMaxStoriesPref();
-        PREFERRED_CAT = preferenceService.getCategoryPref();
+        mPreferredCat = preferenceService.getCategoryPref();
     }
 
 
@@ -124,13 +124,19 @@ public class MainActivity extends ActionBarActivity {
 
     private void loadTopStories(final StoryCardAdapter storyCardAdapter, HackerNewsApiClient service) {
         storyCardAdapter.clear();
-        Observable<List<Integer>> stories = service.getTopStories();
+        Observable<List<Integer>> stories;
 
-        String[] categories = getResources().getStringArray(R.array.categories);
-        if (PREFERRED_CAT.equals(categories[1])) {
+        String[] categories = getResources().getStringArray(R.array.pref_categories);
+        if (mPreferredCat.isEmpty() || mPreferredCat.equals(categories[0]))
+            stories = service.getTopStories();
+        if (mPreferredCat.equals(categories[1])) {
             stories = service.getBestStories();
-        } else if (PREFERRED_CAT.equals(categories[2])) {
+        } else if (mPreferredCat.equals(categories[2])) {
             stories = service.getNewStories();
+        } else if (mPreferredCat.equals(categories[3])) {
+            stories = service.getShowStories();
+        } else {
+            stories = service.getTopStories();
         }
 
         stories.flatMapIterable(ids -> ids)

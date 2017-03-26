@@ -4,8 +4,8 @@
             android:key="pref_cats"
             android:title="@string/pref_cats_title"
             android:defaultValue="TOP"
-            android:entries="@array/pref_cats"
-            android:entryValues="@array/pref_cats"
+            android:entries="@array/pref_categories"
+            android:entryValues="@array/pref_categories"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"/>
 
