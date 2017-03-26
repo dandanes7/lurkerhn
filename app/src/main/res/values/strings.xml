@@ -17,14 +17,10 @@
         <item>Best</item>
         <item>New</item>
         <item>Show</item>
+        <item>Ask</item>
     </string-array>
 
     <string name="pref_cats_title">Change preferred category</string>
-    <!--<string-array name="pref_cats">-->
-        <!--<item>TOP</item>-->
-        <!--<item>BEST</item>-->
-        <!--<item>NEW</item>-->
-    <!--</string-array>-->
     <string name="pref_max_stories_title">Change number of stories to display</string>
     <string-array name="pref_max_stories">
         <item>30</item>

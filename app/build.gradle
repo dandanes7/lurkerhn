@@ -14,6 +14,7 @@ android {
             enabled true
         }
         vectorDrawables.useSupportLibrary = true
+        setProperty("archivesBaseName", "lurkerhn")
     }
     buildTypes {
         release {

@@ -135,10 +135,12 @@ public class MainActivity extends ActionBarActivity {
             stories = service.getNewStories();
         } else if (mPreferredCat.equals(categories[3])) {
             stories = service.getShowStories();
+        } else if (mPreferredCat.equals(categories[4])) {
+            stories = service.getAskStories();
         } else {
             stories = service.getTopStories();
         }
-        stories = service.getAskStories();
+
 
         stories.flatMapIterable(ids -> ids)
                 .take(MAX_STORIES)
