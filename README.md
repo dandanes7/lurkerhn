@@ -17,6 +17,6 @@ At the moment, I'm using this app on a daily basis to read HN. So far, it fits a
 I should mention that the app is called "LurkerHN" because I just read and never post any stuff there. Therefore, that's why I was not interested in developing the login part and therefore, it's for lurkers.
 
 ### TODO:
-- Maybe upload the app on Google Play?
+- Think about uploading the app on Google Play
 
 
