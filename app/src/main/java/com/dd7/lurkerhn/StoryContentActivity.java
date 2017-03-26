@@ -20,7 +20,7 @@ import com.dd7.lurkerhn.rest.client.RestClientFactory;
 import com.dd7.lurkerhn.rest.client.HackerNewsApiClient;
 import com.dd7.lurkerhn.rest.model.Comment;
 import com.dd7.lurkerhn.rest.model.Item;
-import com.dd7.lurkerhn.service.SavedStoriesRepository;
+import com.dd7.lurkerhn.service.StoryRepository;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,7 +34,7 @@ public class StoryContentActivity extends AppCompatActivity {
     private Context mContext;
     private Item mStory;
     private HackerNewsApiClient mService;
-    private SavedStoriesRepository mDatabaseService;
+    private StoryRepository mDatabaseService;
     private boolean mStoryIsSaved;
 
     @Override
@@ -115,7 +115,7 @@ public class StoryContentActivity extends AppCompatActivity {
 
     private void setUpButtonsAndAddContentToTextViews(final Item item) {
         ImageButton saveButton = (ImageButton) findViewById(R.id.save_story);
-        mDatabaseService = new SavedStoriesRepository(mContext);
+        mDatabaseService = new StoryRepository(mContext);
         mStoryIsSaved = mDatabaseService.exists(String.valueOf(item.getId()));
         if (mStoryIsSaved) {
             saveButton.setColorFilter(Color.argb(255, 255, 255, 255));

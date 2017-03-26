@@ -14,7 +14,7 @@ import com.dd7.lurkerhn.adapter.SavedStoriesCardAdapter;
 import com.dd7.lurkerhn.rest.client.RestClientFactory;
 import com.dd7.lurkerhn.rest.client.HackerNewsApiClient;
 import com.dd7.lurkerhn.rest.model.Item;
-import com.dd7.lurkerhn.service.SavedStoriesRepository;
+import com.dd7.lurkerhn.service.StoryRepository;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,7 +25,7 @@ import java.util.List;
 public class SavedStoriesActivity extends AppCompatActivity {
 
     private Context mContext;
-    private SavedStoriesRepository mDatabaseService;
+    private StoryRepository mDatabaseService;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private HackerNewsApiClient mService;
 
@@ -35,7 +35,7 @@ public class SavedStoriesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_saved_stories);
 
         mContext = getApplicationContext();
-        mDatabaseService = new SavedStoriesRepository(mContext);
+        mDatabaseService = new StoryRepository(mContext);
         mService = RestClientFactory.createHackerNewsService();
 
         final SavedStoriesCardAdapter savedStoriesCardAdapter = prepareSavedStoriesCardAdapter();
