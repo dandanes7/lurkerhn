@@ -10,6 +10,7 @@ import java.util.List;
 public interface HackerNewsApiClient {
 
     String HNENDPOINT = "https://hacker-news.firebaseio.com/v0/";
+    String HNWEB = "https://news.ycombinator.com/";
 
     @GET("/topstories.json")
     Observable<List<Integer>> getTopStories();

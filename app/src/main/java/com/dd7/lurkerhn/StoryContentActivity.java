@@ -146,6 +146,7 @@ public class StoryContentActivity extends AppCompatActivity {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
+
                 shareIntent.putExtra(Intent.EXTRA_TEXT, item.getUrl());
                 Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_story));
                 if (shareIntent.resolveActivity(getPackageManager()) != null) {
@@ -168,7 +169,6 @@ public class StoryContentActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         TextView storyBy = (TextView) findViewById(R.id.story_by);
         storyBy.setText(item.getBy());
         TextView storyUrl = (TextView) findViewById(R.id.story_url);
@@ -180,7 +180,8 @@ public class StoryContentActivity extends AppCompatActivity {
             openInBrowserButton.setEnabled(false);
             viewButton.setAlpha(.5f);
             openInBrowserButton.setAlpha(.5f);
-
+            //Set the url like this, so that ASK HN story can be shared
+            item.setUrl(HackerNewsApiClient.HNWEB + "item?id=" +item.getId());
             storyUrl.setText("-");
             setUpAskHnStoryText(item);
         }
