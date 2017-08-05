@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class MainActivity extends ActionBarActivity {
 
-    private final String[] ACTIVITIES = {"Saved Stories", "Settings"};
+    private static final String[] ACTIVITIES = {"Saved Stories", "Settings"};
     private static Map<String, Class> ACTIVITY_CLASSES;
     private static int MAX_STORIES = 50;
 
@@ -127,9 +127,9 @@ public class MainActivity extends ActionBarActivity {
         Observable<List<Integer>> stories;
 
         String[] categories = getResources().getStringArray(R.array.pref_categories);
-        if (mPreferredCat.isEmpty() || mPreferredCat.equals(categories[0]))
+        if (mPreferredCat.isEmpty() || mPreferredCat.equals(categories[0])) {
             stories = service.getTopStories();
-        if (mPreferredCat.equals(categories[1])) {
+        } else if (mPreferredCat.equals(categories[1])) {
             stories = service.getBestStories();
         } else if (mPreferredCat.equals(categories[2])) {
             stories = service.getNewStories();
@@ -150,12 +150,14 @@ public class MainActivity extends ActionBarActivity {
                 .subscribe(new Subscriber<Item>() {
                     @Override
                     public void onCompleted() {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        mSwipeRefreshLayout.setRefreshing(false);
                         Log.e("NETWORKERROR", "Something went wrong" + e.getMessage(), e);
-                        Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Something went wrong" + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
